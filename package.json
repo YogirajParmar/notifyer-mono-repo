@@ -1,0 +1,117 @@
+{
+  "name": "mono-repo",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/frontend/electron.js",
+  "scripts": {
+    "build": "tsc && tsc-alias && yarn build:fe && yarn build:be",
+    "dev": "concurrently \"yarn dev:fe\" \"yarn dev:be\"",
+    "dev:fe": "yarn build:fe && electron dist/frontend/electron.js",
+    "dev:be": "ts-node-dev --respawn -r tsconfig-paths/register --transpile-only src/backend/index.ts",
+    "build:fe": "tsc && cd src/frontend && tsc && cd ../..",
+    "build:be": "tsc && tsc-alias",
+    "start": "electron dist/frontend/electron.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps",
+    "pretty:check": "prettier --check \"./**/*.{js,jsx,ts,tsx,json,md}\"",
+    "pretty:write": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,md}\""
+  },
+  "dependencies": {
+    "@types/node-cron": "^3.0.11",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "class-validator": "^0.14.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.0",
+    "email-templates": "^11.1.1",
+    "eslint": "^8.43.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-import": "^2.27.5",
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "jm-ez-l10n": "^1.0.0",
+    "jsonwebtoken": "^9.0.1",
+    "libphonenumber-js": "^1.10.47",
+    "lint-staged": "^14.0.1",
+    "method-override": "^3.0.0",
+    "moment": "^2.29.4",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.14",
+    "passport": "^0.6.0",
+    "pg": "^8.11.0",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7",
+    "twilio": "^4.18.1",
+    "typeorm": "^0.3.17",
+    "uuid": "^9.0.1",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/body-parser": "^1.19.2",
+    "@types/compression": "^1.7.2",
+    "@types/cors": "^2.8.13",
+    "@types/electron": "^1.6.10",
+    "@types/email-templates": "^10.0.2",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/method-override": "^0.0.32",
+    "@types/morgan": "^1.9.4",
+    "@types/node": "^20.8.0",
+    "@types/nodemailer": "^6.4.11",
+    "@types/passport": "^1.0.12",
+    "@types/passport-google-oauth2": "^0.1.5",
+    "@types/uuid": "^9.0.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.11",
+    "@typescript-eslint/parser": "^5.59.11",
+    "concurrently": "^8.0.1",
+    "electron": "^25.0.0",
+    "electron-builder": "^24.0.0",
+    "esbuild": "^0.18.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "nodemon": "^2.0.22",
+    "prettier": "^3.0.1",
+    "rimraf": "^5.0.1",
+    "sync-dotenv": "^2.7.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.7",
+    "tsconfig-paths": "^4.2.0",
+    "tslint": "^6.1.3",
+    "typescript": "5.0.4"
+  },
+  "build": {
+    "appId": "com.yourapp.id",
+    "productName": "Your App Name",
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  }
+}

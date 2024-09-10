@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "esModuleInterop": true,
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "noImplicitAny": true,
+    "paths": {
+      "@backend/*": ["backend/*"],
+      "@frontend/*": ["frontend/*"],
+      "@configs": ["dist/backend/configs"],
+      "@helpers": ["dist/backend/helpers"],
+      "@entities": ["dist/backend/entities"],
+      "@types": ["dist/backend/types"],
+      "@modules": ["dist/backend/modules"],
+      "@middlewares": ["dist/backend/middlewares"],
+      "@modules/*": ["dist/backend/modules/*"],
+      "@acl": ["dist/backend/acl"]
+    },
+    "types": ["node", "electron"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/frontend/**/*.ts",
+    "src/backend/**/*.ts",
+    "src/frontend/electron.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

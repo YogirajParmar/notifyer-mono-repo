@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PUC App</title>
+    <link rel="stylesheet" href="../assets/css/index.css" />
+    <!-- <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      form {
+        margin-bottom: 20px;
+      }
+      input,
+      select {
+        margin: 5px;
+        padding: 8px;
+        width: 95%;
+      }
+      button {
+        padding: 8px 16px;
+      }
+    </style> -->
+  </head>
+  <body>
+    <h1>PUC App</h1>
+    <h2>Uploaded PUCs</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Vehicle Type</th>
+          <th>Vehicle Number</th>
+          <th>Issue Date</th>
+          <th>Expiration Date</th>
+        </tr>
+      </thead>
+      <tbody id="pucTable">
+        <!-- Fetched PUC details will be inserted here -->
+      </tbody>
+    </table>
+
+    <h2>Upload New PUC Details</h2>
+    <form id="pucForm">
+      <label for="vehicleType">Vehicle Type</label>
+      <select id="vehicleType" required>
+        <option value="Car">Car</option>
+        <option value="Bike">Bike</option>
+      </select>
+
+      <label for="vehicleNumber">Vehicle Number</label>
+      <input type="text" id="vehicleNumber" required />
+
+      <label for="issueDate">Issue Date</label>
+      <input type="date" id="issueDate" required />
+
+      <label for="expirationDate">Expiration Date</label>
+      <input type="date" id="expirationDate" required />
+
+      <button type="submit">Upload PUC</button>
+    </form>
+
+    <script src="../scripts/renderer.js"></script>
+  </body>
+</html>
