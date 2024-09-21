@@ -63,8 +63,7 @@ function addTableButtonListeners() {
   editButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       const id = (e.target as HTMLButtonElement).getAttribute('data-id');
-      // Implement edit functionality
-      console.log(`Edit document with id: ${id}`);
+      openEditModal(id);
     });
   });
 
@@ -76,8 +75,134 @@ function addTableButtonListeners() {
   });
 }
 
+async function openEditModal(id: string) {
+  try {
+    const response = await fetch(`http://localhost:3200/docs/puc/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch document');
+    }
+
+    const document = await response.json();
+    console.log('Fetched document:', document);
+    showEditForm(document);
+  } catch (error) {
+    console.error('Error fetching document:', error);
+    alert('Failed to load document for editing');
+  }
+}
+
+function showEditForm(doc: VDocument) {
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Edit Document</h2>
+      <form id="editForm">
+        <input type="hidden" id="editId" value="${doc.id}">
+        <div class="form-group">
+          <label for="editDocumentType">Document Type</label>
+          <input type="text" id="editDocumentType" value="${doc.documentType}" required>
+        </div>
+        <div class="form-group">
+          <label for="editVehicleType">Vehicle Type</label>
+          <select id="editVehicleType" required>
+            <option value="Car" ${doc.vehicleType === 'Car' ? 'selected' : ''}>Car</option>
+            <option value="Bike" ${doc.vehicleType === 'Bike' ? 'selected' : ''}>Bike</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editVehicleNumber">Vehicle Number</label>
+          <input type="text" id="editVehicleNumber" value="${doc.vehicleNumber}" required>
+        </div>
+        <div class="form-group">
+          <label for="editIssueDate">Issue Date</label>
+          <input type="date" id="editIssueDate" value="${doc.issueDate}" required>
+        </div>
+        <div class="form-group">
+          <label for="editExpirationDate">Expiration Date</label>
+          <input type="date" id="editExpirationDate" value="${doc.expirationDate}" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Update</button>
+          <button type="button" class="btn-secondary" id="cancelEdit">Cancel</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Add event listeners
+  document.getElementById('editForm').addEventListener('submit', handleEditSubmit);
+  document.getElementById('cancelEdit').addEventListener('click', closeModal);
+  modal.querySelector('.close').addEventListener('click', closeModal);
+
+  // Close modal if clicking outside the content
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  function closeModal() {
+    document.body.removeChild(modal);
+  }
+}
+
+async function handleEditSubmit(e: Event) {
+  e.preventDefault();
+  const form = e.target as HTMLFormElement;
+  const id = (document.getElementById('editId') as HTMLInputElement).value;
+  const documentType = (document.getElementById('editDocumentType') as HTMLInputElement).value;
+  const vehicleType = (document.getElementById('editVehicleType') as HTMLSelectElement).value;
+  const vehicleNumber = (document.getElementById('editVehicleNumber') as HTMLInputElement).value;
+  const issueDate = (document.getElementById('editIssueDate') as HTMLInputElement).value;
+  const expirationDate = (document.getElementById('editExpirationDate') as HTMLInputElement).value;
+
+  try {
+    const response = await fetch(`http://localhost:3200/docs/puc/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        documentType,
+        vehicleType,
+        vehicleNumber,
+        issueDate,
+        expirationDate
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update document');
+    }
+
+    alert('Document updated successfully');
+    closeModal();
+    fetchDocuments(); // Refresh the document list
+  } catch (error) {
+    console.error('Error updating document:', error);
+    alert('Failed to update document');
+  }
+}
+
+function closeModal() {
+  const modal = document.querySelector('.modal');
+  if (modal && modal.parentNode) {
+    modal.parentNode.removeChild(modal);
+  }
+}
+
 async function deleteDocument(id: string) {
-  const response = await fetch(`http://localhost:3200/docs/${id}`, {
+  const response = await fetch(`http://localhost:3200/docs/puc/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -93,7 +218,7 @@ async function deleteDocument(id: string) {
 }
 
 async function updateDashboardStats(): Promise<void> {
-  const response = await fetch("http://localhost:3200/docs/puc", {
+  const response = await fetch("http://localhost:3200/docs/stats", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

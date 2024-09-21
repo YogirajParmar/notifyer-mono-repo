@@ -19,6 +19,10 @@ export const PUC = getSequelize().define("pucs", {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  documentType: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, screen } from "electron";
 import * as path from "path";
 import Server from "../backend/serever";
 import * as dotenv from "dotenv";
@@ -6,14 +6,22 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 function createWindow() {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height } = primaryDisplay.workAreaSize;
+
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: width,
+    height: height,
+    x: 0,
+    y: 0,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
   });
+
+  // Remove the window frame and make it cover the entire screen
+  win.setFullScreen(true);
 
   const filePath = `${path.join(__dirname, "pages/login.html")}`;
   win.loadFile(filePath);

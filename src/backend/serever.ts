@@ -9,12 +9,10 @@ import "reflect-metadata";
 import Routes from "./routes";
 import { initDB } from "./configs/db";
 import path from "path";
-import NotificationCron from "./cron/notification.cron";
 dotenv.config();
 
 export default class App {
   protected app: express.Application;
-  private notificationCron = new NotificationCron();
 
   public init() {
     // Init DB
@@ -28,7 +26,6 @@ export default class App {
       storage: path.join(__dirname, "../../database.sqlite"),
     });
 
-    this.notificationCron.start();
     // Init Express
     this.app = express();
 
