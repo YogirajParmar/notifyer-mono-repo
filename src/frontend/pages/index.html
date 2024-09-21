@@ -1,80 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PUC App</title>
+    <title>Vehicle Document Manager</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
     <link rel="stylesheet" href="../assets/css/index.css" />
-    <!-- <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-      }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-      form {
-        margin-bottom: 20px;
-      }
-      input,
-      select {
-        margin: 5px;
-        padding: 8px;
-        width: 95%;
-      }
-      button {
-        padding: 8px 16px;
-      }
-    </style> -->
   </head>
   <body>
-    <h1>PUC App</h1>
-    <h2>Uploaded PUCs</h2>
+    <header>
+      <h1><i class="fas fa-car"></i> Vehicle Document Manager</h1>
+    </header>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Vehicle Type</th>
-          <th>Vehicle Number</th>
-          <th>Issue Date</th>
-          <th>Expiration Date</th>
-        </tr>
-      </thead>
-      <tbody id="pucTable">
-        <!-- Fetched PUC details will be inserted here -->
-      </tbody>
-    </table>
+    <main>
+      <section class="dashboard">
+        <h2>Document Dashboard</h2>
+        <div class="dashboard-stats">
+          <div class="stat-card">
+            <i class="fas fa-file-alt"></i>
+            <span id="totalDocuments">0</span>
+            <p>Total Documents</p>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="expiringDocuments">0</span>
+            <p>Expiring Soon</p>
+          </div>
+        </div>
+      </section>
 
-    <h2>Upload New PUC Details</h2>
-    <form id="pucForm">
-      <label for="vehicleType">Vehicle Type</label>
-      <select id="vehicleType" required>
-        <option value="Car">Car</option>
-        <option value="Bike">Bike</option>
-      </select>
+      <section class="document-list">
+        <h2>Uploaded Documents</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Document Type</th>
+                <th>Vehicle Type</th>
+                <th>Vehicle Number</th>
+                <th>Issue Date</th>
+                <th>Expiration Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="documentTable">
+              <!-- Fetched document details will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <label for="vehicleNumber">Vehicle Number</label>
-      <input type="text" id="vehicleNumber" required />
+      <section class="upload-form">
+        <h2>Upload New Document</h2>
+        <form id="documentForm">
+          <div class="form-group">
+            <label for="documentType">Document Type</label>
+            <input
+              type="text"
+              id="documentType"
+              required
+              placeholder="e.g., PUC, RC, Insurance"
+            />
+          </div>
+          <div class="form-group">
+            <label for="vehicleType">Vehicle Type</label>
+            <select id="vehicleType" required>
+              <option value="">Select vehicle type</option>
+              <option value="Car">Car</option>
+              <option value="Bike">Bike</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="vehicleNumber">Vehicle Number</label>
+            <input
+              type="text"
+              id="vehicleNumber"
+              required
+              placeholder="Enter vehicle number"
+            />
+          </div>
+          <div class="form-group">
+            <label for="issueDate">Issue Date</label>
+            <input type="date" id="issueDate" required />
+          </div>
+          <div class="form-group">
+            <label for="expirationDate">Expiration Date</label>
+            <input type="date" id="expirationDate" required />
+          </div>
+          <button type="submit" class="btn-primary">Upload Document</button>
+        </form>
+      </section>
+    </main>
 
-      <label for="issueDate">Issue Date</label>
-      <input type="date" id="issueDate" required />
-
-      <label for="expirationDate">Expiration Date</label>
-      <input type="date" id="expirationDate" required />
-
-      <button type="submit">Upload PUC</button>
-    </form>
+    <footer>
+      <p>&copy; 2023 Vehicle Document Manager. All rights reserved.</p>
+    </footer>
 
     <script src="../scripts/renderer.js"></script>
   </body>

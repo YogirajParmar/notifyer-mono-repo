@@ -49,7 +49,7 @@ export default class App {
     this.app.use("/", routes.configure());
 
     // Start server
-    this.app.listen(process.env.PORT, () => {
+    this.app.listen(process.env.PORT || 3200, () => {
       console.info(`The server is running in port localhost: ${process.env.PORT}`);
     });
   }

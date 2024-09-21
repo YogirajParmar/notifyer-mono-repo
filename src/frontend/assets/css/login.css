@@ -1,58 +1,98 @@
 body {
-  font-family: "Arial", sans-serif;
-  background-color: #f0f0f0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px),
+    linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-.container {
+.login-container {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08);
   width: 100%;
-  max-width: 400px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  max-width: 350px;
 }
 
-h1 {
+.login-form h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
   text-align: center;
   color: #333;
-  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 600;
 }
 
-input {
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.form-group input {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
+  padding: 0.75rem;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #333;
 }
 
 button {
   width: 100%;
-  padding: 12px;
-  background-color: #4caf50;
+  padding: 0.75rem;
+  background-color: #333;
   color: white;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 4px;
   font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #555;
 }
 
-a {
-  display: block;
-  margin-top: 10px;
+.login-switch {
   text-align: center;
-  color: #4caf50;
-  text-decoration: none;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
 }
 
-a:hover {
+.login-switch a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-switch a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 400px) {
+  .login-container {
+    padding: 1.5rem;
+  }
 }

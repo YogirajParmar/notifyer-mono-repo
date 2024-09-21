@@ -1,85 +1,151 @@
 // Fetch the JWT token from local storage
 const token = localStorage.getItem("jwtToken");
 
-// Define types for PUC data
-interface PUC {
+interface VDocument {
+  id?: string;
+  documentType: string;
   vehicleType: string;
   vehicleNumber: string;
   issueDate: string;
   expirationDate: string;
 }
 
-// Fetch and display existing PUCs when the app loads
+// Fetch and display existing documents when the app loads
 window.onload = () => {
-  fetchPUCs();
+  fetchDocuments();
+  updateDashboardStats();
 };
 
-async function fetchPUCs(): Promise<void> {
+async function fetchDocuments(): Promise<void> {
   const response = await fetch("http://localhost:3200/docs/puc", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Include JWT token in the Authorization header
+      Authorization: `Bearer ${token}`,
     },
   });
 
   if (response.status === 401) {
     alert("Unauthorized! Please log in again.");
-    window.location.href = "login.html"; // Redirect to login page
+    window.location.href = "login.html";
     return;
   }
 
-  const pucList: PUC[] = await response.json();
+  const documentList: VDocument[] = await response.json();
 
-  const pucTable = document.getElementById("pucTable") as HTMLTableElement;
-  pucTable.innerHTML = ""; // Clear the table before adding new rows
+  const documentTable = document.getElementById("documentTable") as HTMLTableElement;
+  documentTable.innerHTML = ""; // Clear the table before adding new rows
 
-  pucList.forEach((puc) => {
+  documentList.forEach((doc) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${puc.vehicleType}</td>
-      <td>${puc.vehicleNumber}</td>
-      <td>${new Date(puc.issueDate).toLocaleDateString()}</td>
-      <td>${new Date(puc.expirationDate).toLocaleDateString()}</td>
+      <td>${doc.documentType}</td>
+      <td>${doc.vehicleType}</td>
+      <td>${doc.vehicleNumber}</td>
+      <td>${new Date(doc.issueDate).toLocaleDateString()}</td>
+      <td>${new Date(doc.expirationDate).toLocaleDateString()}</td>
+      <td>
+        <button class="btn-edit" data-id="${doc.id}">Edit</button>
+        <button class="btn-delete" data-id="${doc.id}">Delete</button>
+      </td>
     `;
-    pucTable.appendChild(row);
+    documentTable.appendChild(row);
+  });
+
+  // Add event listeners for edit and delete buttons
+  addTableButtonListeners();
+}
+
+function addTableButtonListeners() {
+  const editButtons = document.querySelectorAll('.btn-edit');
+  const deleteButtons = document.querySelectorAll('.btn-delete');
+
+  editButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const id = (e.target as HTMLButtonElement).getAttribute('data-id');
+      // Implement edit functionality
+      console.log(`Edit document with id: ${id}`);
+    });
+  });
+
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const id = (e.target as HTMLButtonElement).getAttribute('data-id');
+      deleteDocument(id);
+    });
   });
 }
 
-// Handle form submission to upload new PUC details
-const pucForm = document.getElementById("pucForm") as HTMLFormElement;
-pucForm.addEventListener("submit", async (e: Event) => {
+async function deleteDocument(id: string) {
+  const response = await fetch(`http://localhost:3200/docs/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.ok) {
+    fetchDocuments();
+    updateDashboardStats();
+  } else {
+    console.error("Failed to delete document");
+  }
+}
+
+async function updateDashboardStats(): Promise<void> {
+  const response = await fetch("http://localhost:3200/docs/puc", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.ok) {
+    const stats = await response.json();
+    document.getElementById("totalDocuments").textContent = stats.totalDocuments;
+    document.getElementById("expiringDocuments").textContent = stats.expiringDocuments;
+  } else {
+    console.error("Failed to fetch dashboard stats");
+  }
+}
+
+// Handle form submission to upload new document details
+const documentForm = document.getElementById("documentForm") as HTMLFormElement;
+documentForm.addEventListener("submit", async (e: Event) => {
   e.preventDefault();
 
-  const vehicleType = (document.getElementById("vehicleType") as HTMLInputElement).value;
+  const documentType = (document.getElementById("documentType") as HTMLInputElement).value;
+  const vehicleType = (document.getElementById("vehicleType") as HTMLSelectElement).value;
   const vehicleNumber = (document.getElementById("vehicleNumber") as HTMLInputElement).value;
   const issueDate = (document.getElementById("issueDate") as HTMLInputElement).value;
   const expirationDate = (document.getElementById("expirationDate") as HTMLInputElement).value;
 
-  const pucData: PUC = {
+  const documentData: VDocument = {
+    documentType,
     vehicleType,
     vehicleNumber,
     issueDate,
     expirationDate,
   };
 
-  // Post the new PUC details to the backend with the JWT token
   const response = await fetch("http://localhost:3200/docs/puc", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Include JWT token in the Authorization header
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(pucData),
+    body: JSON.stringify(documentData),
   });
 
   if (response.ok) {
-    // Refresh the PUC list after successful upload
-    fetchPUCs();
+    fetchDocuments();
+    updateDashboardStats();
+    documentForm.reset();
   } else if (response.status === 401) {
     alert("Unauthorized! Please log in again.");
-    window.location.href = "login.html"; // Redirect to login page
+    window.location.href = "login.html";
   } else {
-    console.error("Failed to upload PUC");
+    console.error("Failed to upload document");
   }
 });

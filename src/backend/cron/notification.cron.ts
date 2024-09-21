@@ -8,7 +8,7 @@ import { Op } from "sequelize";
 class NotificationCron {
   public start() {
     try {
-      cron.schedule(`${process.env.CRON_SCHEDULE}`, async () => {
+      cron.schedule(`${process.env.CRON_SCHEDULE || "* 4 * * *"}`, async () => {
         console.log(`Executing notification cron ${Date.now()}!`);
         const targetDate = moment().add(5, "days").toDate();
 

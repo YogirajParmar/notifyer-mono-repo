@@ -5,10 +5,6 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const server = new Server();
-server.init();
-console.log("*****server started*****");
-
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -19,12 +15,21 @@ function createWindow() {
     },
   });
 
-  const filePath = `${path.join(__dirname, "pages/login.html")}`
-  console.log("*****************",`filePath: ${filePath}`);
+  const filePath = `${path.join(__dirname, "pages/login.html")}`;
   win.loadFile(filePath);
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  const server = new Server();
+  server.init();
+  console.log('Env: ', { port: process.env.PORT, baseUrl: process.env.ELECTRON_BASE_URL });
+  console.log("*****server started*****");
+  createWindow();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -32,8 +37,8 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
+// app.on("activate", () => {
+//   if (BrowserWindow.getAllWindows().length === 0) {
+//     createWindow();
+//   }
+// });

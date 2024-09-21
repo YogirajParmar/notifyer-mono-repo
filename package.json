@@ -1,8 +1,12 @@
 {
   "name": "mono-repo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "main": "dist/frontend/electron.js",
+  "author": {
+    "name": "Yogirajsinh Parmar",
+    "email": "yogirajparmar44@gmail.com"
+  },
   "scripts": {
     "build": "tsc && tsc-alias && yarn build:fe && yarn build:be",
     "dev": "concurrently \"yarn dev:fe\" \"yarn dev:be\"",
@@ -45,7 +49,7 @@
     "pg": "^8.11.0",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.37.3",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "5.1.6",
     "twilio": "^4.18.1",
     "typeorm": "^0.3.17",
     "uuid": "^9.0.1",
@@ -88,24 +92,20 @@
     "typescript": "5.0.4"
   },
   "build": {
-    "appId": "com.yourapp.id",
-    "productName": "Your App Name",
+    "appId": "com.yogiraj.notifyer",
+    "productName": "notifyer",
     "files": [
       "dist/**/*",
       "node_modules/**/*"
     ],
+    "extraFiles": [
+      {
+        "from": ".env",
+        "to": ".env"
+      }
+    ],
     "directories": {
       "buildResources": "assets"
-    },
-    "mac": {
-      "target": [
-        "dmg"
-      ]
-    },
-    "win": {
-      "target": [
-        "nsis"
-      ]
     },
     "linux": {
       "target": [

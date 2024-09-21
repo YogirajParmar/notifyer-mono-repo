@@ -4,11 +4,11 @@ interface AuthResponse {
 }
 
 // Get the form and attach a submit event listener
-document.getElementById("loginForm")?.addEventListener("submit", async (e: Event) => {
+document.querySelector(".login-form")?.addEventListener("submit", async (e: Event) => {
   e.preventDefault();
 
-  // Get email and password values
-  const email = (document.getElementById("email") as HTMLInputElement).value;
+  // Get username and password values
+  const username = (document.getElementById("username") as HTMLInputElement).value;
   const password = (document.getElementById("password") as HTMLInputElement).value;
 
   try {
@@ -18,7 +18,7 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e: Event
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
 
     if (response.ok) {
