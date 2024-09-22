@@ -15,7 +15,6 @@ export class AuthController {
         email: req.dto.email,
         password: req.dto.password,
       });
-      console.log(user.dataValues);
       const token = JwtHelper.encode({ id: user.dataValues.id });
       return res.status(200).json({ msg: "User created", token });
     } catch (error) {

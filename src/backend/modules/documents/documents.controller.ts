@@ -120,7 +120,6 @@ export class DocumentController {
       const user = req.me;
       const { id } = req.params;
       const { vehicleNumber, vehicleType, issueDate, expirationDate, documentType } = req.dto;
-      console.log(`***updateDocument`, req.dto);
       const findExistingUser = await User.findByPk(user.id);
 
       if (!findExistingUser) {
@@ -128,7 +127,7 @@ export class DocumentController {
       }
 
       const findExistingDocument = await PUC.findByPk(id);
-      console.log("*** existing doc: ", findExistingDocument);
+
       if (!findExistingDocument) {
         return res.status(404).json({ error: "Document not found" });
       }

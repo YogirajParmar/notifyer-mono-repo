@@ -43,6 +43,16 @@
             <p>Expiring Soon</p>
           </div>
         </div>
+
+        <!-- New section for expiring documents -->
+        <div class="expiring-documents">
+          <h3>
+            <i class="fas fa-exclamation-circle"></i> Documents Expiring Soon
+          </h3>
+          <div id="expiringList" class="expiring-list">
+            <!-- Expiring documents will be inserted here dynamically -->
+          </div>
+        </div>
       </section>
 
       <section class="document-list">
@@ -80,11 +90,7 @@
           </div>
           <div class="form-group">
             <label for="vehicleType">Vehicle Type</label>
-            <select id="vehicleType" required>
-              <option value="">Select vehicle type</option>
-              <option value="Car">Car</option>
-              <option value="Bike">Bike</option>
-            </select>
+            <input type="text" id="vehicleType" required />
           </div>
           <div class="form-group">
             <label for="vehicleNumber">Vehicle Number</label>
@@ -113,7 +119,7 @@
     </footer>
 
     <script src="../scripts/window-controls.js"></script>
-    <script src="../scripts/index.js"></script>
+    <script src="../scripts/renderer.js"></script>
     <script>
       const { ipcRenderer } = require("electron");
 

@@ -52,13 +52,6 @@ function createWindow() {
 app.whenReady().then(() => {
   const server = new Server();
   server.init();
-  console.log('Env: ', { 
-    port: process.env.PORT, 
-    baseUrl: process.env.ELECTRON_BASE_URL,
-    nodeEnv: process.env.NODE_ENV,
-    resourcesPath: process.resourcesPath
-  });
-  console.log("*****server started*****");
   createWindow();
 
   app.on("activate", () => {

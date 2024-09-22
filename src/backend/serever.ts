@@ -9,6 +9,8 @@ import "reflect-metadata";
 import Routes from "./routes";
 import { initDB } from "./configs/db";
 import path from "path";
+import { app } from "electron";
+import { User, PUC } from './entities';
 dotenv.config();
 
 export default class App {
@@ -23,8 +25,12 @@ export default class App {
       password: "",
       host: "localhost",
       port: 3306,
-      storage: path.join(__dirname, "../../database.sqlite"),
+      storage: path.join(app.getPath('userData'), 'database.sqlite'),
     });
+
+    // Ensure models are initialized
+    User;
+    PUC;
 
     // Init Express
     this.app = express();

@@ -1,4 +1,3 @@
-// Fetch the JWT token from local storage
 const token = localStorage.getItem("jwtToken");
 
 interface VDocument {
@@ -10,7 +9,6 @@ interface VDocument {
   expirationDate: string;
 }
 
-// Fetch and display existing documents when the app loads
 window.onload = () => {
   fetchDocuments();
   updateDashboardStats();
@@ -89,7 +87,7 @@ async function openEditModal(id: string) {
     }
 
     const document = await response.json();
-    console.log('Fetched document:', document);
+
     showEditForm(document);
   } catch (error) {
     console.error('Error fetching document:', error);
@@ -139,12 +137,10 @@ function showEditForm(doc: VDocument) {
 
   document.body.appendChild(modal);
 
-  // Add event listeners
   document.getElementById('editForm').addEventListener('submit', handleEditSubmit);
   document.getElementById('cancelEdit').addEventListener('click', closeModal);
   modal.querySelector('.close').addEventListener('click', closeModal);
 
-  // Close modal if clicking outside the content
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
   });
@@ -240,7 +236,7 @@ documentForm.addEventListener("submit", async (e: Event) => {
   e.preventDefault();
 
   const documentType = (document.getElementById("documentType") as HTMLInputElement).value;
-  const vehicleType = (document.getElementById("vehicleType") as HTMLSelectElement).value;
+  const vehicleType = (document.getElementById("vehicleType") as HTMLInputElement).value;
   const vehicleNumber = (document.getElementById("vehicleNumber") as HTMLInputElement).value;
   const issueDate = (document.getElementById("issueDate") as HTMLInputElement).value;
   const expirationDate = (document.getElementById("expirationDate") as HTMLInputElement).value;
@@ -253,23 +249,29 @@ documentForm.addEventListener("submit", async (e: Event) => {
     expirationDate,
   };
 
-  const response = await fetch("http://localhost:3200/docs/puc", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(documentData),
-  });
+  try {
+    const response = await fetch("http://localhost:3200/docs/puc", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(documentData),
+    });
 
-  if (response.ok) {
-    fetchDocuments();
-    updateDashboardStats();
-    documentForm.reset();
-  } else if (response.status === 401) {
-    alert("Unauthorized! Please log in again.");
-    window.location.href = "login.html";
-  } else {
-    console.error("Failed to upload document");
+    const responseData = await response.json();
+
+    if (response.ok) {
+      fetchDocuments();
+      updateDashboardStats();
+      documentForm.reset();
+    } else if (response.status === 401) {
+      alert("Unauthorized! Please log in again.");
+      window.location.href = "login.html";
+    } else {
+      console.error("Failed to upload document");
+    }
+  } catch (error) {
+    console.error("Error uploading document:", error);
   }
 });
