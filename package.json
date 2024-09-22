@@ -20,7 +20,8 @@
     "postinstall": "electron-builder install-app-deps",
     "pretty:check": "prettier --check \"./**/*.{js,jsx,ts,tsx,json,md}\"",
     "pretty:write": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,md}\"",
-    "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend"
+    "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
+    "dist:win": "electron-builder --win --x64"
   },
   "dependencies": {
     "@types/node-cron": "^3.0.11",
@@ -109,11 +110,20 @@
     "directories": {
       "buildResources": "assets"
     },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
     "linux": {
       "target": [
         "AppImage",
         "deb"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     }
   }
 }

@@ -51,6 +51,7 @@ async function fetchDocuments(): Promise<void> {
   });
 
   addTableButtonListeners();
+  updateExpiringDocuments(documentList);
 }
 
 function addTableButtonListeners() {
@@ -275,3 +276,33 @@ documentForm.addEventListener("submit", async (e: Event) => {
     console.error("Error uploading document:", error);
   }
 });
+
+function updateExpiringDocuments(documents: VDocument[]) {
+  const expiringList = document.getElementById('expiringList');
+  expiringList.innerHTML = '';
+
+  const fiftienDaysFromNow = new Date();
+  fiftienDaysFromNow.setDate(fiftienDaysFromNow.getDate() + 15);
+
+  const expiringDocs = documents.filter(doc => 
+    new Date(doc.expirationDate) <= fiftienDaysFromNow && new Date(doc.expirationDate) > new Date()
+  );
+
+  if (expiringDocs.length === 0) {
+    expiringList.innerHTML = '<div class="expiring-item"><p>No documents expiring soon.</p></div>';
+  } else {
+    expiringDocs.forEach(doc => {
+      const daysUntilExpiry = Math.ceil((new Date(doc.expirationDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+      
+      const item = document.createElement('div');
+      item.className = 'expiring-item';
+      item.innerHTML = `
+        <h4>${doc.documentType}</h4>
+        <p><strong>Vehicle:</strong> ${doc.vehicleNumber}</p>
+        <p><strong>Expires:</strong> ${new Date(doc.expirationDate).toLocaleDateString()}</p>
+        <p><strong>Days left:</strong> ${daysUntilExpiry}</p>
+      `;
+      expiringList.appendChild(item);
+    });
+  }
+}
