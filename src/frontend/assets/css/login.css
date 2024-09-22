@@ -2,14 +2,69 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   background-color: #f0f2f5;
   background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px),
     linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
   background-size: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#titlebar {
+  -webkit-app-region: drag;
+  height: 32px;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+}
+
+#window-controls {
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+
+#window-controls button {
+  background: none;
+  border: none;
+  color: #5f6368;
+  font-size: 18px;
+  padding: 0;
+  cursor: pointer;
+  width: 46px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+#window-controls button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#minimize:hover {
+  color: #1a73e8;
+}
+
+#maximize:hover {
+  color: #188038;
+}
+
+#close:hover {
+  background-color: #ea4335;
+  color: white;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-container {

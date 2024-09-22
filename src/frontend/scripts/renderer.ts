@@ -34,7 +34,7 @@ async function fetchDocuments(): Promise<void> {
   const documentList: VDocument[] = await response.json();
 
   const documentTable = document.getElementById("documentTable") as HTMLTableElement;
-  documentTable.innerHTML = ""; // Clear the table before adding new rows
+  documentTable.innerHTML = "";
 
   documentList.forEach((doc) => {
     const row = document.createElement("tr");
@@ -52,7 +52,6 @@ async function fetchDocuments(): Promise<void> {
     documentTable.appendChild(row);
   });
 
-  // Add event listeners for edit and delete buttons
   addTableButtonListeners();
 }
 

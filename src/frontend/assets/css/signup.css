@@ -2,14 +2,30 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   background-color: #f0f2f5;
   background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px),
     linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
   background-size: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#titlebar {
+  -webkit-app-region: drag;
+  height: 32px;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .signup-container {
@@ -21,6 +37,10 @@ body {
     0 1px 3px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 350px;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 }
 
 .signup-form h2 {
@@ -80,7 +100,6 @@ button:hover {
   }
 }
 
-/* Specific styles for sign-up form */
 .signup-form .form-group {
   margin-bottom: 1rem;
 }

@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-top: 32px;
 }
 
 header {
@@ -20,7 +21,7 @@ header {
 main {
   flex: 1;
   padding: 2rem;
-  padding-bottom: 5rem; /* Add padding to prevent footer overlap */
+  padding-bottom: 5rem;
 }
 
 h1,
@@ -86,8 +87,8 @@ th {
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 2rem auto; /* Center the form */
-  max-width: 80%; /* Limit width to 80% of the screen */
+  margin: 2rem auto;
+  max-width: 80%;
   width: 100%;
 }
 
@@ -178,4 +179,12 @@ footer {
   text-align: center;
   padding: 1rem;
   width: 100%;
+}
+
+#titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }

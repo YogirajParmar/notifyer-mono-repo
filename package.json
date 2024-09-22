@@ -100,7 +100,7 @@
       "dist/**/*",
       "node_modules/**/*"
     ],
-    "extraFiles": [
+    "extraResources": [
       {
         "from": ".env",
         "to": ".env"

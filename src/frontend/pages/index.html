@@ -9,8 +9,21 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
     />
     <link rel="stylesheet" href="../assets/css/index.css" />
+    <link rel="stylesheet" href="../assets/css/window-controls.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
   </head>
   <body>
+    <div id="titlebar">
+      <div id="window-controls">
+        <button id="minimize"><i class="material-icons">remove</i></button>
+        <button id="maximize"><i class="material-icons">crop_square</i></button>
+        <button id="close"><i class="material-icons">close</i></button>
+      </div>
+    </div>
+
     <header>
       <h1><i class="fas fa-car"></i> Vehicle Document Manager</h1>
     </header>
@@ -99,6 +112,22 @@
       <p>&copy; 2023 Vehicle Document Manager. All rights reserved.</p>
     </footer>
 
-    <script src="../scripts/renderer.js"></script>
+    <script src="../scripts/window-controls.js"></script>
+    <script src="../scripts/index.js"></script>
+    <script>
+      const { ipcRenderer } = require("electron");
+
+      document.getElementById("minimize").addEventListener("click", () => {
+        ipcRenderer.send("minimize-window");
+      });
+
+      document.getElementById("maximize").addEventListener("click", () => {
+        ipcRenderer.send("maximize-window");
+      });
+
+      document.getElementById("close").addEventListener("click", () => {
+        ipcRenderer.send("close-window");
+      });
+    </script>
   </body>
 </html>
