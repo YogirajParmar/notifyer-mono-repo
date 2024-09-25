@@ -12,7 +12,11 @@ export class DocumentRouter extends TRouter{
   private authMiddleware: AuthMiddleware;
 
   initRoutes(): void {
-    this.router.get("/puc",this.authMiddleware.auth, this.documentController.getDocument);
-    this.router.post("/puc",Validator.validate(CreatePUCDto), this.authMiddleware.auth, this.documentController.addDocument);
+    this.router.get("/puc",this.authMiddleware.auth, this.documentController.getDocuments);
+    this.router.post("/puc", Validator.validate(CreatePUCDto), this.authMiddleware.auth, this.documentController.addDocument);
+    this.router.delete("/puc/:id", this.authMiddleware.auth, this.documentController.deleteDocument);
+    this.router.get('/stats', this.authMiddleware.auth, this.documentController.getDocumentStats);
+    this.router.put('/puc/:id', Validator.validate(CreatePUCDto), this.authMiddleware.auth, this.documentController.updateDocument);
+    this.router.get('/puc/:id', this.authMiddleware.auth, this.documentController.getDocument);
   }
 }

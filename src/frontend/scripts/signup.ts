@@ -18,7 +18,7 @@ document.querySelector('.signup-form')?.addEventListener("submit", async (e: Eve
       },
       body: JSON.stringify({ firstName, lastName, email, password }),
     });
-    console.log(response);
+
     if (response.ok) {
       const data: AuthResponse = await response.json();
       const token = data.token;

@@ -7,8 +7,8 @@ interface AuthResponse {
 document.querySelector(".login-form")?.addEventListener("submit", async (e: Event) => {
   e.preventDefault();
 
-  // Get username and password values
-  const username = (document.getElementById("username") as HTMLInputElement).value;
+  // Get email and password values
+  const email = (document.getElementById("email") as HTMLInputElement).value;
   const password = (document.getElementById("password") as HTMLInputElement).value;
 
   try {
@@ -18,7 +18,7 @@ document.querySelector(".login-form")?.addEventListener("submit", async (e: Even
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     if (response.ok) {

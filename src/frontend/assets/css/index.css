@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-top: 32px;
 }
 
 header {
@@ -20,7 +21,7 @@ header {
 main {
   flex: 1;
   padding: 2rem;
-  padding-bottom: 5rem; /* Add padding to prevent footer overlap */
+  padding-bottom: 5rem;
 }
 
 h1,
@@ -86,40 +87,90 @@ th {
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 2rem auto; /* Center the form */
-  max-width: 80%; /* Limit width to 80% of the screen */
+  margin: 2rem auto;
+  max-width: 80%;
   width: 100%;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
 }
 
 label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 5px;
 }
 
 input,
 select {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
+  padding: 8px;
+  border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.btn-primary {
-  background-color: #3498db;
-  color: #fff;
-  padding: 0.5rem 1rem;
+.btn-primary,
+.btn-secondary {
+  padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
 }
 
-.btn-primary:hover {
-  background-color: #2980b9;
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modal {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 footer {
@@ -127,5 +178,122 @@ footer {
   color: #ecf0f1;
   text-align: center;
   padding: 1rem;
-  width: 100%;
+}
+
+#titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  -webkit-app-region: drag;
+  z-index: 9999;
+}
+
+#window-controls {
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+
+#window-controls button {
+  width: 46px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 10px;
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+}
+
+#window-controls button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#close:hover {
+  background: #e81123 !important;
+  color: white;
+}
+
+.expiring-documents {
+  margin-top: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.expiring-documents h3 {
+  margin-bottom: 1rem;
+  color: #e74c3c;
+}
+
+.expiring-list-container {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.expiring-list {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.expiring-item {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 0.75rem;
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.expiring-item h4 {
+  margin: 0 0 0.5rem 0;
+  color: #721c24;
+}
+
+.expiring-item p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #721c24;
+}
+
+.expiring-list-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.expiring-list-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.expiring-list-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.expiring-list-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.expiring-list-container {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+@media (max-width: 768px) {
+  .expiring-item {
+    width: calc(50% - 1rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .expiring-item {
+    width: 100%;
+  }
 }

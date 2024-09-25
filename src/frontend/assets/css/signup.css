@@ -2,14 +2,63 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   background-color: #f0f2f5;
   background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px),
     linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
   background-size: 20px 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-top: 32px;
+}
+
+#titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  -webkit-app-region: drag;
+  z-index: 9999;
+}
+
+#window-controls {
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+
+#window-controls button {
+  width: 46px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 10px;
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#window-controls button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#close:hover {
+  background: #e81123 !important;
+  color: white;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .signup-container {
@@ -33,7 +82,7 @@ body {
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .form-group label {
@@ -45,10 +94,10 @@ body {
 
 .form-group input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.6rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: border-color 0.3s;
 }
 
@@ -74,22 +123,6 @@ button:hover {
   background-color: #555;
 }
 
-@media (max-width: 400px) {
-  .signup-container {
-    padding: 1.5rem;
-  }
-}
-
-/* Specific styles for sign-up form */
-.signup-form .form-group {
-  margin-bottom: 1rem;
-}
-
-.signup-form input {
-  font-size: 0.9rem;
-  padding: 0.6rem;
-}
-
 .signup-switch {
   text-align: center;
   margin-top: 1rem;
@@ -105,4 +138,10 @@ button:hover {
 
 .signup-switch a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 400px) {
+  .signup-container {
+    padding: 1.5rem;
+  }
 }

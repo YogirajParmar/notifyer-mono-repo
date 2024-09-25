@@ -5,33 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
     <link rel="stylesheet" href="../assets/css/signup.css" />
+    <link rel="stylesheet" href="../assets/css/window-controls.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
   </head>
   <body>
-    <div class="signup-container">
-      <form class="signup-form">
-        <h2>Sign Up</h2>
-        <div class="form-group">
-          <label for="firstname">First Name</label>
-          <input type="text" id="firstname" name="firstname" required />
-        </div>
-        <div class="form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" required />
-        </div>
-        <button type="submit">Sign Up</button>
-        <p class="signup-switch">
-          Already have an account? <a href="login.html">Log in</a>
-        </p>
-      </form>
+    <div id="titlebar">
+      <div id="window-controls">
+        <button id="minimize"><i class="material-icons">remove</i></button>
+        <button id="maximize"><i class="material-icons">crop_square</i></button>
+        <button id="close"><i class="material-icons">close</i></button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="signup-container">
+        <form class="signup-form">
+          <h2>Sign Up</h2>
+          <div class="form-group">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" name="firstname" required />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+          <button type="submit">Sign Up</button>
+          <p class="signup-switch">
+            Already have an account? <a href="login.html">Log in</a>
+          </p>
+        </form>
+      </div>
     </div>
     <script src="../scripts/signup.js"></script>
+    <script>
+      const { ipcRenderer } = require("electron");
+
+      document.getElementById("minimize").addEventListener("click", () => {
+        ipcRenderer.send("minimize-window");
+      });
+
+      document.getElementById("maximize").addEventListener("click", () => {
+        ipcRenderer.send("maximize-window");
+      });
+
+      document.getElementById("close").addEventListener("click", () => {
+        ipcRenderer.send("close-window");
+      });
+    </script>
   </body>
 </html>

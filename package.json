@@ -8,18 +8,20 @@
     "email": "yogirajparmar44@gmail.com"
   },
   "scripts": {
-    "build": "tsc && tsc-alias && yarn build:fe && yarn build:be",
+    "build": "tsc && tsc-alias && yarn build:fe && yarn build:be && yarn copy-fe-assets",
     "dev": "concurrently \"yarn dev:fe\" \"yarn dev:be\"",
     "dev:fe": "yarn build:fe && electron dist/frontend/electron.js",
     "dev:be": "ts-node-dev --respawn -r tsconfig-paths/register --transpile-only src/backend/index.ts",
-    "build:fe": "tsc && cd src/frontend && tsc && cd ../..",
+    "build:fe": "tsc && cd src/frontend && tsc && cd ../.. && yarn copy-fe-assets",
     "build:be": "tsc && tsc-alias",
     "start": "electron dist/frontend/electron.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "postinstall": "electron-builder install-app-deps",
     "pretty:check": "prettier --check \"./**/*.{js,jsx,ts,tsx,json,md}\"",
-    "pretty:write": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,md}\""
+    "pretty:write": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,md}\"",
+    "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
+    "dist:win": "electron-builder build --win --x64"
   },
   "dependencies": {
     "@types/node-cron": "^3.0.11",
@@ -75,6 +77,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "concurrently": "^8.0.1",
+    "copyfiles": "^2.4.1",
     "electron": "^25.0.0",
     "electron-builder": "^24.0.0",
     "esbuild": "^0.18.4",
@@ -94,11 +97,14 @@
   "build": {
     "appId": "com.yogiraj.notifyer",
     "productName": "notifyer",
+    "icon": "dist/frontend/assets/images/app-logo.webp",
     "files": [
       "dist/**/*",
-      "node_modules/**/*"
+      "!dist/**/*.map",
+      "node_modules/**/*",
+      "package.json"
     ],
-    "extraFiles": [
+    "extraResources": [
       {
         "from": ".env",
         "to": ".env"
@@ -107,11 +113,22 @@
     "directories": {
       "buildResources": "assets"
     },
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "dist/frontend/assets/images/favicon.ico"
+    },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
-      ]
-    }
+        "AppImage"
+      ],
+      "icon": "dist/frontend/assets/images/favicon.ico"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/sqlite3/**/*"
+    ],
+    "afterPack": "./after-pack.js"
   }
 }

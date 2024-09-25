@@ -2,7 +2,7 @@ import path from 'path';
 import { Sequelize, Options } from 'sequelize';
 import { app } from 'electron';
 
-// Declare a variable to hold the Sequelize instance
+
 let sequelize: Sequelize;
 
 export function initDB(config: Options): void {
@@ -11,12 +11,20 @@ export function initDB(config: Options): void {
     return;
   }
 
-  sequelize = new Sequelize(config);
+  sequelize = new Sequelize({
+    ...config,
+    dialectOptions: {
+      ...config.dialectOptions,
+      foreign_keys: false
+    }
+  });
 
   sequelize.authenticate()
     .then(() => {
       console.info("DB Connection has been established successfully.");
-      return sequelize.sync({ force: false });
+      return sequelize.query('PRAGMA foreign_keys = OFF;')
+        .then(() => sequelize.sync({ alter: true }))
+        .then(() => sequelize.query('PRAGMA foreign_keys = ON;'));
     })
     .then(() => {
       console.info('Database & tables created!');

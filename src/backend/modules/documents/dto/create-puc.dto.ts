@@ -16,4 +16,8 @@ export class CreatePUCDto {
   @IsDateString()
   @IsNotEmpty()
   expirationDate: string;
+
+  @IsString()
+  @IsNotEmpty()
+  documentType: string;
 }
