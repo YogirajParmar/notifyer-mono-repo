@@ -9,16 +9,21 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  padding-top: 32px; /* Added to account for the titlebar */
 }
 
 #titlebar {
-  -webkit-app-region: drag;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 32px;
   background: #f0f0f0;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0;
+  -webkit-app-region: drag;
+  z-index: 9999;
 }
 
 #window-controls {
@@ -27,36 +32,25 @@ body {
 }
 
 #window-controls button {
-  background: none;
-  border: none;
-  color: #5f6368;
-  font-size: 18px;
-  padding: 0;
-  cursor: pointer;
   width: 46px;
   height: 32px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 10px;
+  -webkit-app-region: no-drag;
+  cursor: pointer;
   display: flex;
-  align-items: center;
   justify-content: center;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
+  align-items: center;
 }
 
 #window-controls button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-#minimize:hover {
-  color: #1a73e8;
-}
-
-#maximize:hover {
-  color: #188038;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 #close:hover {
-  background-color: #ea4335;
+  background: #e81123 !important;
   color: white;
 }
 

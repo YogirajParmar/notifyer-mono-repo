@@ -21,7 +21,7 @@
     "pretty:check": "prettier --check \"./**/*.{js,jsx,ts,tsx,json,md}\"",
     "pretty:write": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,md}\"",
     "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
-    "dist:win": "electron-builder --win --x64"
+    "dist:win": "electron-builder build --win --x64"
   },
   "dependencies": {
     "@types/node-cron": "^3.0.11",
@@ -97,9 +97,12 @@
   "build": {
     "appId": "com.yogiraj.notifyer",
     "productName": "notifyer",
+    "icon": "dist/frontend/assets/images/app-logo.webp",
     "files": [
       "dist/**/*",
-      "node_modules/**/*"
+      "!dist/**/*.map",
+      "node_modules/**/*",
+      "package.json"
     ],
     "extraResources": [
       {
@@ -112,18 +115,20 @@
     },
     "win": {
       "target": [
-        "nsis"
-      ]
+        "portable"
+      ],
+      "icon": "dist/frontend/assets/images/favicon.ico"
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
-      ]
+        "AppImage"
+      ],
+      "icon": "dist/frontend/assets/images/favicon.ico"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
-    }
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/sqlite3/**/*"
+    ],
+    "afterPack": "./after-pack.js"
   }
 }

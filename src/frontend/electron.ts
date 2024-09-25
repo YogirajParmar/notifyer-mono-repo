@@ -19,6 +19,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: windowWidth,
     height: windowHeight,
+    icon: path.join(__dirname, 'assets', 'images', process.platform === 'win32' ? 'favicon.ico' : 'app-logo.webp'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
