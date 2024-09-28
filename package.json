@@ -1,6 +1,6 @@
 {
   "name": "mono-repo",
-  "version": "1.0.1",
+  "version": "1.1.2",
   "private": true,
   "main": "dist/frontend/electron.js",
   "author": {
@@ -97,7 +97,7 @@
   "build": {
     "appId": "com.yogiraj.notifyer",
     "productName": "notifyer",
-    "icon": "dist/frontend/assets/images/app-logo.webp",
+    "icon": "dist/frontend/assets/images/notifyer-app-logo.png",
     "files": [
       "dist/**/*",
       "!dist/**/*.map",
@@ -123,7 +123,7 @@
       "target": [
         "AppImage"
       ],
-      "icon": "dist/frontend/assets/images/favicon.ico"
+      "icon": "dist/frontend/assets/images/notifyer-app-logo.png"
     },
     "asar": true,
     "asarUnpack": [
