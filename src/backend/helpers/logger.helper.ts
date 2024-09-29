@@ -2,7 +2,7 @@ import * as winston from "winston";
 import 'winston-daily-rotate-file';
 import * as path from "path";
 import * as os from "os";
-import * as fs from "fs";
+import * as fs from "fs/promises";
 
 export class Logger {
   private static instance: Logger;
@@ -22,15 +22,26 @@ export class Logger {
     return Logger.instance;
   }
 
-  private ensureLogDirectory(): void {
-    if (!fs.existsSync(this.logDir)) {
-      fs.mkdirSync(this.logDir, { recursive: true });
+  private async ensureLogDirectory(): Promise<void> {
+    try {
+      await fs.access(this.logDir);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        try {
+          await fs.mkdir(this.logDir, { recursive: true });
+          this.log('info', `Created log directory: ${this.logDir}`);
+        } catch (error) {
+          this.log('error', `Failed to create log directory: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      } else {
+        this.log('error', `Failed to access log directory: ${error instanceof Error ? error.message : String(error)}`);
+      }
     }
   }
 
   private createLogger(): winston.Logger {
     const logFormat = winston.format.printf(({ timestamp, level, label, message }) => {
-      return `(${timestamp} ${level} [${label}]: ${message})`;
+      return `${timestamp} ${level} [${label}]: ${message}`;
     });
 
     const rotatingFileTransport = new winston.transports.DailyRotateFile({
@@ -65,42 +76,38 @@ export class Logger {
     this.logger.log(level, message);
   }
 
-  public cleanupOldLogs(): void {
+  public async cleanupOldLogs(): Promise<void> {
     this.log('info', 'Starting log cleanup');
 
-    fs.readdir(this.logDir, (err, files) => {
-      if (err) {
-        this.log('error', `Error reading log directory: ${err.message}`);
-        return;
-      }
+    try {
+      const files = await fs.readdir(this.logDir);
+      const now = Date.now();
 
-      const now = new Date();
-      files.forEach(file => {
-        const filePath = path.join(this.logDir, file);
-        fs.stat(filePath, (err, stats) => {
-          if (err) {
-            this.log('error', `Error getting file stats for ${file}: ${err.message}`);
-            return;
-          }
+      const deletePromises = files.map(async (file) => {
+        const filePath = path.resolve(this.logDir, file);
+        try {
+          const stats = await fs.stat(filePath);
+          const fileAgeInDays = (now - stats.mtime.getTime()) / (1000 * 60 * 60 * 24);
 
-          const fileAge = new Date(stats.mtime);
-          if ((now.getTime() - fileAge.getTime()) / (1000 * 60 * 60 * 24) > 14) {
-            fs.unlink(filePath, err => {
-              if (err) {
-                this.log('error', `Error deleting old log file ${file}: ${err.message}`);
-              } else {
-                this.log('info', `Deleted old log file: ${file}`);
-              }
-            });
+          // Check if the file is older than 2 days
+          if (fileAgeInDays > 2) {
+            await fs.unlink(filePath);
+            this.log('info', `Deleted old log file: ${file}`);
           }
-        });
+        } catch (err) {
+          this.log('error', `Error handling file ${file}: ${err instanceof Error ? err.message : String(err)}`);
+        }
       });
-    });
+
+      await Promise.all(deletePromises);
+    } catch (err) {
+      this.log('error', `Error reading log directory: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   public setupLogCleanup(): void {
     this.cleanupOldLogs();
-    setInterval(() => this.cleanupOldLogs(), 24 * 60 * 60 * 1000); // Run every 24 hours
+    setInterval(() => this.cleanupOldLogs(), 24 * 60 * 60 * 1000);
   }
 }
 
