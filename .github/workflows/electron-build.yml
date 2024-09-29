@@ -1,0 +1,41 @@
+name: Build and Publish Electron App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.20.4
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Increment version
+        run: |
+          npm version patch -m "Bump version to %s"
+          git push
+          git push --tags
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          release: true
+
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}

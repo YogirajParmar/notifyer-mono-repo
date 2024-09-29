@@ -13,11 +13,13 @@ import { app } from "electron";
 import { User, PUC } from './entities';
 import { logger } from "@backend/helpers";
 import { ApiLoggerMiddleware } from "./middlewares/logger.middleware";
+import ReminderNotification from "./cron/notification.cron";
 dotenv.config();
 
 export default class App {
   protected app: express.Application;
   private logger = logger;
+  private reminderNotification = new ReminderNotification();
 
   public init() {
     // Init DB
@@ -61,6 +63,9 @@ export default class App {
     this.app.listen(process.env.PORT || 3200, () => {
       this.logger.log("info", `The server is running in port localhost: ${process.env.PORT}`);
     });
+
+    // Start notification cron
+    this.reminderNotification.start();
   }
 
   public getExpresApp() {

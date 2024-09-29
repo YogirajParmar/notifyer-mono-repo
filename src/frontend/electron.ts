@@ -1,4 +1,5 @@
 import { app, BrowserWindow, screen, ipcMain } from "electron";
+import { autoUpdater } from "electron-updater";
 import * as path from "path";
 import Server from "../backend/serever";
 import * as dotenv from "dotenv";
@@ -50,6 +51,8 @@ function createWindow() {
   ipcMain.on('close-window', () => {
     win.close();
   });
+
+  autoUpdater.checkForUpdatesAndNotify();
 }
 
 app.whenReady().then(() => {
@@ -67,4 +70,13 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+autoUpdater.on('update-available', () => {
+  logger.log("info", "Update available");
+});
+
+autoUpdater.on('update-downloaded', () => {
+  logger.log("info", "Update downloaded");
+  autoUpdater.quitAndInstall();
 });
