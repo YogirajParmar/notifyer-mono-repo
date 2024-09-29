@@ -41,4 +41,8 @@ export class Constants {
   public static readonly OTP_EXPIRY = 300;
 
   public static readonly OTP_LENGTH = 6;
+
+  public static readonly DAYS_BEFORE_EXPIRATION = 15
+
+  public static readonly CRON_SCHEDULE = `30 3 * * *`;
 }
