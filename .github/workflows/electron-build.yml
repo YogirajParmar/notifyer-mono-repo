@@ -25,19 +25,23 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Set up Git user
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
       - name: Increment version
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm version patch -m "Bump version to %s"
-          git push
-          git push --tags
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main --tags
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          github_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           release: true
 
 env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
