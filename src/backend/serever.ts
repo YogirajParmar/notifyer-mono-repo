@@ -11,10 +11,13 @@ import { initDB } from "./configs/db";
 import path from "path";
 import { app } from "electron";
 import { User, PUC } from './entities';
+import { logger } from "@backend/helpers";
+import { ApiLoggerMiddleware } from "./middlewares/logger.middleware";
 dotenv.config();
 
 export default class App {
   protected app: express.Application;
+  private logger = logger;
 
   public init() {
     // Init DB
@@ -47,13 +50,16 @@ export default class App {
     this.app.use(json({ limit: "50mb" }));
     this.app.use(urlencoded({ extended: true }));
 
+    // Middlewares
+    this.app.use(new ApiLoggerMiddleware().logApiCall);
+
     // Routing
     const routes = new Routes();
     this.app.use("/", routes.configure());
 
     // Start server
     this.app.listen(process.env.PORT || 3200, () => {
-      console.info(`The server is running in port localhost: ${process.env.PORT}`);
+      this.logger.log("info", `The server is running in port localhost: ${process.env.PORT}`);
     });
   }
 

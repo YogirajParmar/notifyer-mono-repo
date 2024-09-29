@@ -2,6 +2,7 @@ import { app, BrowserWindow, screen, ipcMain } from "electron";
 import * as path from "path";
 import Server from "../backend/serever";
 import * as dotenv from "dotenv";
+import { logger } from "@backend/helpers"
 
 const envPath = app.isPackaged
   ? path.join(process.resourcesPath, '.env')
@@ -19,7 +20,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: windowWidth,
     height: windowHeight,
-    icon: path.join(__dirname, 'assets', 'images', process.platform === 'win32' ? 'favicon.ico' : 'app-logo.webp'),
+    icon: path.join(__dirname, 'assets', 'icons', 'android-chrome-192x192.png'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -29,6 +30,7 @@ function createWindow() {
   });
 
   win.center();
+  logger.log("info", "Starting the application");
 
   const filePath = `${path.join(__dirname, "pages/login.html")}`;
   win.loadFile(filePath);
@@ -53,6 +55,7 @@ function createWindow() {
 app.whenReady().then(() => {
   const server = new Server();
   server.init();
+  logger.log("info", "Server initialized");
   createWindow();
 
   app.on("activate", () => {
