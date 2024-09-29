@@ -1,21 +1,23 @@
-import nodemailer from 'nodemailer';
+import { Notification } from "electron";
+import path from "path";
 
-export const sendNotification = async (email: string, message: string) => {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-        user: process.env.SMTP_EMAIL_HOST,
-        pass: process.env.SMTP_PASSWORD
-    }
-    });
+export const sendNotification = async (
+  title: string,
+  body: string,
+  urgency?: string
+) => {
+  const notification = new Notification({
+    title,
+    body,
+    icon: path.join(__dirname, "assets/icons/favicon-32x32.png"),
+    urgency: (urgency as "normal" | "low" | "critical") || "normal",
+    timeoutType: "default",
+    actions: [
+      { type: "button", text: "Open App" },
+      { type: "button", text: "Dismiss" },
+    ],
+  });
 
-    const mailOptions = {
-        from: 'yogirajparmar10@gmail.com',
-        to: email,
-        subject: 'Notification',
-        text: message,
-    };
-
-    await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully');
-}
+  notification.show();
+  return notification;
+};
