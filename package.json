@@ -1,6 +1,6 @@
 {
   "name": "mono-repo",
-  "version": "1.1.4",
+  "version": "1.1.6",
   "private": true,
   "main": "dist/frontend/electron.js",
   "author": {
@@ -8,18 +8,18 @@
     "email": "yogirajparmar44@gmail.com"
   },
   "scripts": {
-    "build": "tsc && tsc-alias && yarn build:fe && yarn build:be && yarn copy-fe-assets",
+    "build": "yarn build:fe && yarn build:be",
     "dev": "concurrently \"yarn dev:fe\" \"yarn dev:be\"",
-    "dev:fe": "yarn build:fe && electron dist/frontend/electron.js",
+    "dev:fe": "electron dist/frontend/electron.js",
     "dev:be": "ts-node-dev --respawn -r tsconfig-paths/register --transpile-only src/backend/index.ts",
-    "build:fe": "tsc && cd src/frontend && tsc && cd ../.. && yarn copy-fe-assets",
+    "build:fe": "cd src/frontend && tsc && cd ../.. && yarn copy-fe-assets",
     "build:be": "tsc && tsc-alias",
     "start": "electron dist/frontend/electron.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "postinstall": "electron-builder install-app-deps",
-    "pretty:check": "prettier --check \"./**/*.{js,jsx,ts,tsx,json,md}\"",
-    "pretty:write": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,md}\"",
+    "pretty:check": "prettier --check './**/*.{js,jsx,ts,tsx,json,md}'",
+    "pretty:write": "prettier --write './**/*.{js,jsx,ts,tsx,json,md}'",
     "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
     "dist:win": "electron-builder build --win --x64",
     "version": "git add package.json"
@@ -110,9 +110,16 @@
     },
     "win": {
       "target": [
-        "portable"
+        "nsis"
       ],
-      "icon": "dist/frontend/assets/icons/favicon.ico"
+      "icon": "dist/frontend/assets/icons/android-chrome-512x512.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "notifyer"
     },
     "linux": {
       "target": [
@@ -124,10 +131,6 @@
     "asarUnpack": [
       "node_modules/sqlite3/**/*"
     ],
-    "afterPack": "./after-pack.js",
-    "npmRebuild": false,
-    "nodeGypRebuild": false,
-    "removePackageScripts": true,
-    "buildDependenciesFromSource": true
+    "afterPack": "./after-pack.js"
   }
 }
