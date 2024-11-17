@@ -1,4 +1,3 @@
-// Define the types for the expected response
 interface AuthResponse {
   token: string;
 }

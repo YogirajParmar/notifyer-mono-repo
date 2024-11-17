@@ -94,20 +94,18 @@ export class DocumentController {
       const totalDocuments = await PUC.count({ where: { userId: user.id } });
 
       const today = new Date();
-      const fiveDaysFromNow = new Date(today);
-      fiveDaysFromNow.setDate(today.getDate() + 5);
-      const expiringDocuments = await PUC.count({
+      const expieredDocs = await PUC.count({
         where: {
           userId: user.id,
           expirationDate: {
-            [Op.between]: [today, fiveDaysFromNow]
+            [Op.lt]: today
           }
         }
       });
 
       res.json({
         totalDocuments,
-        expiringDocuments
+        expieredDocs
       });
     } catch (err) {
       console.error(err.message);
