@@ -10,17 +10,13 @@ interface VDocument {
   expirationDate: string;
 }
 
-export default class UIHandler {
-  private documentTable: HTMLTableElement;
-  private eventListners: EventListeners;
+export default class UIHandler {;
   private apiHandler: APIHandler;
+  private eventListners: EventListeners;
 
   constructor() {
-    this.documentTable = document.getElementById(
-      "documentTable"
-    ) as HTMLTableElement;
-    this.eventListners = new EventListeners();
     this.apiHandler = new APIHandler();
+    this.eventListners = new EventListeners();
   }
 
   public fetchDocuments = async () => {
@@ -36,7 +32,8 @@ export default class UIHandler {
   };
 
   public updateDocumentTable = (documents: any[]) => {
-    this.documentTable.innerHTML = "";
+    let documentTable: HTMLTableElement
+    documentTable.innerHTML = "";
 
     documents.forEach((doc) => {
       const row = document.createElement("tr");
@@ -51,7 +48,7 @@ export default class UIHandler {
             <button class="btn-delete" data-id="${doc.id}">Delete</button>
         </td>
         `;
-      this.documentTable.appendChild(row);
+      documentTable.appendChild(row);
     });
   };
 
