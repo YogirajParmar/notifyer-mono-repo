@@ -29,7 +29,7 @@ export class AuthController {
 
       const user = await User.findOne({
         where: { email },
-        attributes: ["email", "id", "firstName", "lastName", "password"]
+        attributes: ["email", "id", "firstName", "lastName", "password"],
       });
 
       if (!user) {
@@ -47,5 +47,23 @@ export class AuthController {
     } catch (error) {
       return res.status(500).json({ error: "Sign-in failed" });
     }
+  };
+
+  public resetPassword = async (req: TRequest, res: TResponse) => {
+    const { email, password } = req.dto;
+
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user || !user.dataValues) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const hashedPassword = await Bcrypt.hash(password);
+    const updatedUser = await User.update(
+      { password: hashedPassword },
+      { where: { email: email } }
+    );
+
+    return res.status(200).json({ success: true, updatedUser: updatedUser });
   };
 }

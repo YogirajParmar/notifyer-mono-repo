@@ -9,7 +9,8 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding-top: 32px; /* Added to account for the titlebar */
+  padding-top: 32px;
+  overflow: hidden;
 }
 
 #titlebar {
@@ -137,6 +138,23 @@ button:hover {
 }
 
 .login-switch a:hover {
+  text-decoration: underline;
+}
+
+.forgot-password {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.forgot-password a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-password a:hover {
   text-decoration: underline;
 }
 
