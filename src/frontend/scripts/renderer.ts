@@ -44,11 +44,11 @@ async function fetchDocuments(): Promise<void> {
 
     const expirationDate = new Date(doc.expirationDate);
     if (expirationDate < currentDate) {
-      row.style.backgroundColor = "rgba(227, 154, 154, 0.4)"; // Expired
+      row.style.backgroundColor = "rgba(255, 2, 2, 0.4)"; // Expired
     } else if (expirationDate < warningDate) {
-      row.style.backgroundColor = "rgba(245, 234, 152, 0.4)"; // Expiring soon // 224, 216, 153
+      row.style.backgroundColor = "rgba(250, 221, 5, 0.4)"; // Expiring soon // 224, 216, 153
     } else {
-      row.style.backgroundColor = "rgba(177, 222, 151, 0.4)"; // Valid
+      row.style.backgroundColor = "rgba(95, 248, 6, 0.4)"; // Valid
     }
 
     row.innerHTML = `

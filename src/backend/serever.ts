@@ -11,7 +11,7 @@ import { initDB } from "./configs/db";
 import path from "path";
 import { app } from "electron";
 import { User, PUC } from './entities';
-import { logger } from "@backend/helpers";
+import { logger } from "./helpers";
 import { ApiLoggerMiddleware } from "./middlewares/logger.middleware";
 import ReminderNotification from "./cron/notification.cron";
 dotenv.config();

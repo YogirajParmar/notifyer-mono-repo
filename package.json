@@ -1,8 +1,9 @@
 {
-  "name": "mono-repo",
-  "version": "1.1.6",
+  "name": "docalert",
+  "version": "1.2.1",
   "private": true,
   "main": "dist/frontend/electron.js",
+  "description": "DocAlert is an application to manage Pollution Under Control (PUC) certificates and other vehicle documents.",
   "author": {
     "name": "Yogirajsinh Parmar",
     "email": "yogirajparmar44@gmail.com"
@@ -83,8 +84,8 @@
     "typescript": "5.0.4"
   },
   "build": {
-    "appId": "com.yogiraj.notifyer",
-    "productName": "notifyer",
+    "appId": "com.yogiraj.docalert",
+    "productName": "docalert",
     "icon": "dist/frontend/assets/icons/android-chrome-512x512.png",
     "publish": [
       {
@@ -119,7 +120,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "notifyer"
+      "shortcutName": "DocAlert"
     },
     "linux": {
       "target": [
