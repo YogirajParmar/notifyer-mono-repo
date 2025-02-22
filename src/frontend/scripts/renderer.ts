@@ -43,20 +43,21 @@ async function fetchDocuments(): Promise<void> {
     const row = document.createElement("tr");
 
     const expirationDate = new Date(doc.expirationDate);
+
     if (expirationDate < currentDate) {
-      row.style.backgroundColor = "rgba(255, 2, 2, 0.4)"; // Expired
+      row.style.backgroundColor = "rgb(255, 2, 2)"; // Expired
     } else if (expirationDate < warningDate) {
-      row.style.backgroundColor = "rgba(250, 221, 5, 0.4)"; // Expiring soon // 224, 216, 153
+      row.style.backgroundColor = "rgb(250, 221, 5)"; // Expiring soon // 224, 216, 153
     } else {
-      row.style.backgroundColor = "rgba(95, 248, 6, 0.4)"; // Valid
+      row.style.backgroundColor = "rgba(95, 248, 6, 0.72)"; // Valid
     }
 
     row.innerHTML = `
       <td>${doc.documentType}</td>
       <td>${doc.vehicleType}</td>
       <td>${doc.vehicleNumber}</td>
-      <td>${new Date(doc.issueDate).toLocaleDateString()}</td>
-      <td>${expirationDate.toLocaleDateString()}</td>
+      <td>${formatDate(doc.issueDate)}</td>
+      <td>${formatDate(doc.expirationDate)}</td>
       <td>
         <button class="btn-edit" data-id="${doc.id}">Edit</button>
         <button class="btn-delete" data-id="${doc.id}">Delete</button>
@@ -126,10 +127,7 @@ function showEditForm(doc: VDocument) {
         </div>
         <div class="form-group">
           <label for="editVehicleType">Vehicle Type</label>
-          <select id="editVehicleType" required>
-            <option value="Car" ${doc.vehicleType === "Car" ? "selected" : ""}>Car</option>
-            <option value="Bike" ${doc.vehicleType === "Bike" ? "selected" : ""}>Bike</option>
-          </select>
+          <input type="text" id="editVehicleType" value="${doc.vehicleType}" required />
         </div>
         <div class="form-group">
           <label for="editVehicleNumber">Vehicle Number</label>
@@ -264,8 +262,7 @@ async function updateDashboardStats(): Promise<void> {
     const stats = await response.json();
     document.getElementById("totalDocuments").textContent =
       stats.totalDocuments;
-    document.getElementById("expired").textContent =
-      stats.expieredDocs;
+    document.getElementById("expired").textContent = stats.expieredDocs;
   } else {
     console.error("Failed to fetch dashboard stats");
   }
@@ -361,3 +358,10 @@ function updateExpiringDocuments(documents: VDocument[]) {
     });
   }
 }
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return `${String(date.getDate()).padStart(2, "0")}-${String(
+    date.getMonth() + 1
+  ).padStart(2, "0")}-${date.getFullYear()}`;
+};
