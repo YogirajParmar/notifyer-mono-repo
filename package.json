@@ -1,6 +1,6 @@
 {
   "name": "docalert",
-  "version": "1.2.1",
+  "version": "1.2.6",
   "private": true,
   "main": "dist/frontend/electron.js",
   "description": "DocAlert is an application to manage Pollution Under Control (PUC) certificates and other vehicle documents.",
@@ -22,7 +22,7 @@
     "pretty:check": "prettier --check './**/*.{js,jsx,ts,tsx,json,md}'",
     "pretty:write": "prettier --write './**/*.{js,jsx,ts,tsx,json,md}'",
     "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
-    "dist:win": "electron-builder build --win --x64",
+    "dist:win": "electron-builder build --win --x64 --publish always",
     "version": "git add package.json"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^16.3.0",
+    "electron-log": "^5.3.0",
     "electron-updater": "^6.3.4",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
