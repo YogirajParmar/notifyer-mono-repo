@@ -91,9 +91,12 @@ function createWindow() {
     logger.log("info", "loading index file");
     win.loadFile(path.join(__dirname, "pages/index.html"));
   });
-}
 
-console.log("Initializing autoUpdater..."); // Debugging log
+  ipcMain.on("login-failed", (event) => {
+    logger.log("info", "reload login file");
+    win.loadFile(path.join(__dirname, "pages/login.html"));
+  });
+}
 
 // check for update
 autoUpdater.on("checking-for-update", () => {
