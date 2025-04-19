@@ -1,54 +1,79 @@
-// import { logger } from "@backend/helpers";
 const { ipcRenderer } = require("electron");
+
 interface AuthResponse {
   token: string;
 }
 
-document
-  .querySelector(".login-form")
-  ?.addEventListener("submit", async (e: Event) => {
-    e.preventDefault();
+const form = document.querySelector(".login-form") as HTMLFormElement | null;
+const emailInput = document.getElementById("email") as HTMLInputElement;
+const passwordInput = document.getElementById("password") as HTMLInputElement;
+const errorMessage = document.getElementById("error-message") as HTMLDivElement;
 
-    const emailInput = document.getElementById("email") as HTMLInputElement;
-    const passwordInput = document.getElementById(
-      "password"
-    ) as HTMLInputElement;
+const minimizeButton = document.getElementById("minimize");
+const maximizeButton = document.getElementById("maximize");
+const closeButton = document.getElementById("close");
 
-    const email = emailInput.value;
-    const password = passwordInput.value;
+const windowButtons = [minimizeButton, maximizeButton, closeButton];
 
-    try {
-      const response = await fetch("http://localhost:3200/auth/sign-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+windowButtons.forEach((button) => {
+  if (button) {
+    button.addEventListener("click", () => {
+      console.log("Button", button.id);
+      ipcRenderer.send(`${button.id}-window`);
+    });
+  }
+});
 
-      // logger.log(
-      //   "info",
-      //   `Sign-in API response  \n response: ${response}  \n status: ${response.status}`
-      // );
+const params = new URLSearchParams(window.location.search);
+if (params.get("error") === "1") {
+  errorMessage.textContent = "Login failed. Please check your credentials.";
+  errorMessage.style.display = "block";
+}
 
-      if (!response.ok) {
-        alert("Login failed. Please check your credentials.");
-        emailInput.value = "";
-        passwordInput.value = "";
-        emailInput.focus();
-        return;
-      }
+const showError = (message: string) => {
+  if (errorMessage) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = "block";
+  } else {
+    console.warn("Error message element not found");
+  }
+};
 
-      const data: AuthResponse = await response.json();
+const resetForm = () => {
+  emailInput.value = "";
+  passwordInput.value = "";
+  emailInput.focus();
+};
 
-      localStorage.setItem("jwtToken", data.token);
+console.log("login script loaded");
 
-      if (localStorage.getItem("jwtToken") !== null) {
-        ipcRenderer.send("login-success");
-      }
+form?.addEventListener("submit", async (e: Event) => {
+  e.preventDefault();
+  errorMessage.style.display = "none";
 
-      // window.location.href = "index.html";
-    } catch (error) {
-      console.error("Error during login", error);
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  try {
+    const response = await fetch("http://localhost:3200/auth/sign-in", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      ipcRenderer.send("login-failed");
+      return;
     }
-  });
+
+    const data: AuthResponse = await response.json();
+    localStorage.setItem("jwtToken", data.token);
+    ipcRenderer.send("login-success");
+  } catch (error) {
+    console.error("Login error:", error);
+    showError("An error occurred. Please try again.");
+    resetForm();
+  }
+});

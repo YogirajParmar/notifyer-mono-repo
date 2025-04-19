@@ -23,6 +23,10 @@
       <div class="login-container">
         <form class="login-form">
           <h2>Login</h2>
+          <div
+            id="error-message"
+            style="color: red; display: none; margin-bottom: 10px"
+          ></div>
           <div class="form-group">
             <label for="email">E-mail</label>
             <input type="text" id="email" name="email" required />
@@ -42,20 +46,5 @@
       </div>
     </div>
     <script src="../scripts/login.js"></script>
-    <script>
-      const { ipcRenderer } = require("electron");
-
-      document.getElementById("minimize").addEventListener("click", () => {
-        ipcRenderer.send("minimize-window");
-      });
-
-      document.getElementById("maximize").addEventListener("click", () => {
-        ipcRenderer.send("maximize-window");
-      });
-
-      document.getElementById("close").addEventListener("click", () => {
-        ipcRenderer.send("close-window");
-      });
-    </script>
   </body>
 </html>

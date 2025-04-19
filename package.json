@@ -2,7 +2,7 @@
   "name": "docalert",
   "version": "1.2.12",
   "private": true,
-  "main": "dist/frontend/electron.js",
+  "main": "dist/frontend/main.js",
   "description": "DocAlert is an application to manage Pollution Under Control (PUC) certificates and other vehicle documents.",
   "author": {
     "name": "Yogirajsinh Parmar",
@@ -15,7 +15,7 @@
     "dev:be": "ts-node-dev --respawn -r tsconfig-paths/register --transpile-only src/backend/index.ts",
     "build:fe": "cd src/frontend && tsc && cd ../.. && yarn copy-fe-assets",
     "build:be": "tsc && tsc-alias",
-    "start": "electron dist/frontend/electron.js",
+    "start": "electron dist/frontend/main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "postinstall": "electron-builder install-app-deps",

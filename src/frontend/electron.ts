@@ -47,36 +47,36 @@ function createWindow() {
   const filePath = `${path.join(__dirname, "pages/login.html")}`;
   win.loadFile(filePath);
 
-  setInterval(() => {
-    if (win.isDestroyed()) {
-      console.log("Main window is destroyed.");
-      return;
-    }
+  // setInterval(() => {
+  //   if (win.isDestroyed()) {
+  //     console.log("Main window is destroyed.");
+  //     return;
+  //   }
 
-    logger.log("info", "Checking if main window is still responsive...");
-    win.webContents
-      .executeJavaScript("console.log('Renderer process active');")
-      .then(() => logger.log("info", "Window is responsive"))
-      .catch(() =>
-        logger.log("info", "Window is NOT responsive! Possible freeze.")
-      );
-  }, 5000);
+  //   logger.log("info", "Checking if main window is still responsive...");
+  //   win.webContents
+  //     .executeJavaScript("console.log('Renderer process active');")
+  //     .then(() => logger.log("info", "Window is responsive"))
+  //     .catch(() =>
+  //       logger.log("info", "Window is NOT responsive! Possible freeze.")
+  //     );
+  // }, 5000);
 
-  ipcMain.on("minimize-window", () => {
-    win.minimize();
-  });
+  // ipcMain.on("minimize-window", () => {
+  //   win.minimize();
+  // });
 
-  ipcMain.on("maximize-window", () => {
-    if (win.isMaximized()) {
-      win.unmaximize();
-    } else {
-      win.maximize();
-    }
-  });
+  // ipcMain.on("maximize-window", () => {
+  //   if (win.isMaximized()) {
+  //     win.unmaximize();
+  //   } else {
+  //     win.maximize();
+  //   }
+  // });
 
-  ipcMain.on("close-window", () => {
-    win.close();
-  });
+  // ipcMain.on("close-window", () => {
+  //   win.close();
+  // });
 
   autoUpdater.setFeedURL({
     provider: "github",
