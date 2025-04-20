@@ -323,6 +323,70 @@ documentForm.addEventListener("submit", async (e: Event) => {
   }
 });
 
+document.getElementById("searchBtn")?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const documentTable = document.getElementById(
+    "documentTable"
+  ) as HTMLTableElement;
+  documentTable.innerHTML = "";
+
+  const searchQuery = (
+    document.getElementById("searchInput") as HTMLInputElement
+  ).value.trim();
+
+  const documents = await searchDocuments(searchQuery);
+
+  if (!documents || documents.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+
+    cell.colSpan = 6;
+    cell.style.textAlign = "center";
+    cell.textContent = "No document found for your search.";
+
+    row.appendChild(cell);
+    documentTable.appendChild(row);
+  } else {
+    const currentDate = new Date();
+    const warningDate = new Date();
+    warningDate.setDate(currentDate.getDate() + 15);
+
+    documents.forEach((doc: VDocument) => {
+      const row = document.createElement("tr");
+      const expirationDate = new Date(doc.expirationDate);
+
+      if (expirationDate < currentDate) {
+        row.style.backgroundColor = "rgb(255, 2, 2)"; // Expired
+      } else if (expirationDate < warningDate) {
+        row.style.backgroundColor = "rgb(250, 221, 5)"; // Expiring soon // 224, 216, 153
+      } else {
+        row.style.backgroundColor = "rgba(95, 248, 6, 0.72)"; // Valid
+      }
+      row.innerHTML = `
+        <td>${doc.documentType}</td>
+        <td>${doc.vehicleType}</td>
+        <td>${doc.vehicleNumber}</td>
+        <td>${formatDate(doc.issueDate)}</td>
+        <td>${formatDate(doc.expirationDate)}</td>
+        <td>
+          <button class="btn-edit" data-id="${doc.id}">Edit</button>
+          <button class="btn-delete" data-id="${doc.id}">Delete</button>
+        </td>
+      `;
+      documentTable.appendChild(row);
+    });
+  }
+
+  addTableButtonListeners();
+
+  const resetButton = document.getElementById("reset-table-btn");
+  if (resetButton) resetButton.style.display = "block";
+  resetButton?.addEventListener("click", () => {
+    fetchDocuments();
+    resetButton.style.display = "none";
+  });
+});
+
 function updateExpiringDocuments(documents: VDocument[]) {
   const expiringList = document.getElementById("expiringList");
   expiringList.innerHTML = "";
@@ -364,4 +428,27 @@ const formatDate = (dateString: string) => {
   return `${String(date.getDate()).padStart(2, "0")}-${String(
     date.getMonth() + 1
   ).padStart(2, "0")}-${date.getFullYear()}`;
+};
+
+const searchDocuments = async (query: string) => {
+  if (query === "") return;
+
+  const token = localStorage.getItem("jwtToken");
+
+  const response = await fetch(
+    `http://localhost:3200/docs/search?query=${query}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response) {
+    console.log("Failed to fetch the documents");
+  }
+
+  return response.json();
 };

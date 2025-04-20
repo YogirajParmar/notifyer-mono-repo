@@ -307,6 +307,64 @@ footer {
   scrollbar-color: #888 #f1f1f1;
 }
 
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-container input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  font-size: 16px;
+  background-color: transparent;
+}
+
+.search-container button {
+  background-color: #3498db;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-container button:hover {
+  background-color: white;
+  color: #3498db;
+}
+
+.material-icons {
+  font-size: 20px;
+}
+
+.reset {
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
+  overflow: hidden;
+}
+.reset button {
+  background-color: #3498db;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: white;
+  cursor: pointer;
+  font-size: medium;
+  transition: background-color 0.3s ease;
+}
+
 @media (max-width: 768px) {
   .expiring-item {
     width: calc(50% - 1rem);

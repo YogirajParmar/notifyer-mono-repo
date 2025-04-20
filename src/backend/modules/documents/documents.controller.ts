@@ -9,7 +9,13 @@ export class DocumentController {
   public addDocument = async (req: TRequest<CreatePUCDto>, res: TResponse) => {
     try {
       const user = req.me;
-      const { vehicleNumber, vehicleType, issueDate, expirationDate, documentType } = req.dto;
+      const {
+        vehicleNumber,
+        vehicleType,
+        issueDate,
+        expirationDate,
+        documentType,
+      } = req.dto;
       const findExistingUser = await User.findByPk(user.id);
 
       if (!findExistingUser) {
@@ -78,7 +84,7 @@ export class DocumentController {
       console.error(error.message);
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
 
   public getDocumentStats = async (req: TRequest, res: TResponse) => {
     try {
@@ -98,14 +104,14 @@ export class DocumentController {
         where: {
           userId: user.id,
           expirationDate: {
-            [Op.lt]: today
-          }
-        }
+            [Op.lt]: today,
+          },
+        },
       });
 
       res.json({
         totalDocuments,
-        expieredDocs
+        expieredDocs,
       });
     } catch (err) {
       console.error(err.message);
@@ -113,11 +119,20 @@ export class DocumentController {
     }
   };
 
-  public updateDocument = async (req: TRequest<CreatePUCDto>, res: TResponse) => {
+  public updateDocument = async (
+    req: TRequest<CreatePUCDto>,
+    res: TResponse
+  ) => {
     try {
       const user = req.me;
       const { id } = req.params;
-      const { vehicleNumber, vehicleType, issueDate, expirationDate, documentType } = req.dto;
+      const {
+        vehicleNumber,
+        vehicleType,
+        issueDate,
+        expirationDate,
+        documentType,
+      } = req.dto;
       const findExistingUser = await User.findByPk(user.id);
 
       if (!findExistingUser) {
@@ -156,7 +171,7 @@ export class DocumentController {
         return res.status(404).json({ error: "User not found" });
       }
 
-      const document = await PUC.findOne({where: {id: id, userId: userId}});
+      const document = await PUC.findOne({ where: { id: id, userId: userId } });
 
       if (!document) {
         return res.status(404).json({ error: "Document not found" });
@@ -167,5 +182,33 @@ export class DocumentController {
       console.error(error.message);
       return res.status(500).json({ error: error.message });
     }
-  }
+  };
+
+  public searchDocuments = async (req: TRequest, res: TResponse) => {
+    try {
+      const userId = req.me.id;
+      const query = ((req.query.query as string) || "").trim().toLowerCase();
+
+      if (!query) {
+        return res.status(400).json({ message: "Search query is required" });
+      }
+
+      const documents = await PUC.findAll({
+        where: {
+          userId,
+          [Op.or]: [
+            { documentType: { [Op.like]: `%${query}%` } },
+            { vehicleNumber: { [Op.like]: `%${query}%` } },
+            { vehicleType: { [Op.like]: `%${query}%` } },
+          ],
+        },
+        order: [["createdAt", "DESC"]],
+      });
+
+      res.json(documents);
+    } catch (err) {
+      console.error("Error searching documents:", err);
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  };
 }

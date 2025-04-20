@@ -66,6 +66,16 @@
 
       <section class="document-list">
         <h2>Uploaded Documents</h2>
+        <div class="search-container">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by vehicle number, type or document type..."
+          />
+          <button id="searchBtn">
+            <span class="material-icons">search</span>
+          </button>
+        </div>
         <div class="table-container">
           <table>
             <thead>
@@ -82,6 +92,11 @@
               <!-- Fetched document details will be inserted here -->
             </tbody>
           </table>
+        </div>
+        <div class="reset">
+          <button type="reset" id="reset-table-btn" style="display: none">
+            Reset
+          </button>
         </div>
       </section>
 
@@ -127,8 +142,8 @@
       <p>&copy; 2023 Vehicle Document Manager. All rights reserved.</p>
     </footer>
 
-    <script src="../scripts/renderer.js"></script>
-    <script>
+    <script type="module" src="../scripts/renderer.js"></script>
+    <!-- <script>
       const { ipcRenderer } = require("electron");
 
       document.getElementById("minimize").addEventListener("click", () => {
@@ -142,6 +157,6 @@
       document.getElementById("close").addEventListener("click", () => {
         ipcRenderer.send("close-window");
       });
-    </script>
+    </script> -->
   </body>
 </html>
