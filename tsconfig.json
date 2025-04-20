@@ -27,7 +27,9 @@
     "src/**/*.ts",
     "src/frontend/**/*.ts",
     "src/backend/**/*.ts",
-    "src/frontend/electron.ts"
+    "src/frontend/electron.ts",
+    "src/backend",
+    "src/frontend/main"
   ],
   "exclude": ["node_modules", "dist"]
 }

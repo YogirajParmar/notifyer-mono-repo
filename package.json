@@ -2,20 +2,18 @@
   "name": "docalert",
   "version": "1.2.12",
   "private": true,
-  "main": "dist/frontend/main.js",
+  "main": "dist/frontend/main/main.js",
   "description": "DocAlert is an application to manage Pollution Under Control (PUC) certificates and other vehicle documents.",
   "author": {
     "name": "Yogirajsinh Parmar",
     "email": "yogirajparmar44@gmail.com"
   },
   "scripts": {
-    "build": "rm -rf dist && yarn build:fe && yarn build:be",
-    "dev": "concurrently \"yarn dev:fe\" \"yarn dev:be\"",
-    "dev:fe": "electron dist/frontend/electron.js",
+    "dev:frontend": "vite",
+    "dev:fe": "electron dist/frontend/main.js",
     "dev:be": "ts-node-dev --respawn -r tsconfig-paths/register --transpile-only src/backend/index.ts",
     "build:fe": "cd src/frontend && tsc && cd ../.. && yarn copy-fe-assets",
     "build:be": "tsc && tsc-alias",
-    "start": "electron dist/frontend/main.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "postinstall": "electron-builder install-app-deps",
@@ -23,7 +21,13 @@
     "pretty:write": "prettier --write './**/*.{js,jsx,ts,tsx,json,md}'",
     "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
     "dist:win": "electron-builder build --win --x64 --publish always",
-    "version": "git add package.json"
+    "version": "git add package.json",
+    "dev": "vite",
+    "build:frontend": "vite build",
+    "build:main": "tsc",
+    "build": "npm run build:main && npm run build:frontend && electron-builder",
+    "start": "electron .",
+    "dev:electron": "vite build --watch & tsc --watch & electron ."
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -82,7 +86,8 @@
     "ts-node-dev": "^2.0.0",
     "tsc-alias": "^1.8.7",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "5.0.4"
+    "typescript": "^5.0.4",
+    "vite": "^6.3.2"
   },
   "build": {
     "appId": "com.yogiraj.docalert",

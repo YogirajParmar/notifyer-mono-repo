@@ -1,7 +1,6 @@
-import path from 'path';
-import { Sequelize, Options } from 'sequelize';
-import { app } from 'electron';
-
+import path from "path";
+import { Sequelize, Options } from "sequelize";
+import { app } from "electron";
 
 let sequelize: Sequelize;
 
@@ -15,19 +14,21 @@ export function initDB(config: Options): void {
     ...config,
     dialectOptions: {
       ...config.dialectOptions,
-      foreign_keys: false
-    }
+      foreign_keys: false,
+    },
   });
 
-  sequelize.authenticate()
+  sequelize
+    .authenticate()
     .then(() => {
       console.info("DB Connection has been established successfully.");
-      return sequelize.query('PRAGMA foreign_keys = OFF;')
+      return sequelize
+        .query("PRAGMA foreign_keys = OFF;")
         .then(() => sequelize.sync({ alter: true }))
-        .then(() => sequelize.query('PRAGMA foreign_keys = ON;'));
+        .then(() => sequelize.query("PRAGMA foreign_keys = ON;"));
     })
     .then(() => {
-      console.info('Database & tables created!');
+      console.info("Database & tables created!");
     })
     .catch((error: any) => {
       console.error(`Unable to connect to the database: ${error}`);
@@ -35,7 +36,8 @@ export function initDB(config: Options): void {
 }
 
 export function getSequelize(): Sequelize {
-  const dbPath = path.join(app.getPath('userData'), 'database.sqlite');
+  // const dbPath = path.join(app.getPath("userData"), "database.sqlite");
+  const dbPath = path.join(__dirname, "database.sqlite");
   if (!sequelize) {
     initDB({
       dialect: "sqlite",
@@ -45,7 +47,7 @@ export function getSequelize(): Sequelize {
       host: "localhost",
       port: 3306,
       storage: dbPath,
-    })
+    });
     // throw new Error('Database not initialized. Call initDB() first.');
   }
   return sequelize;
