@@ -5,14 +5,15 @@ import Server from "../backend/serever";
 
 export class Main {
   private mainWindow: BrowserWindow;
-  private updater = autoUpdater;
-  private server = new Server();
+  private server: Server;
   private mainApp = app;
+  private updater = autoUpdater;
 
   private loginFile: string;
 
   constructor() {
     this.loginFile = path.join(__dirname, "pages/login.html");
+    this.server = new Server();
     this.checkForUpdates();
     this.init();
   }
