@@ -53,6 +53,9 @@ export class Main {
 
   private async checkForUpdates() {
     try {
+      console.log("Check for updates and notify called...");
+      this.updater.checkForUpdatesAndNotify();
+
       this.updater.on("checking-for-update", () => {
         console.log("checking for updates...");
       });
