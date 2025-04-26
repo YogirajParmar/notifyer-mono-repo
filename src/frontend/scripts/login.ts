@@ -1,18 +1,60 @@
-// Define the types for the expected response
+const { ipcRenderer } = require("electron");
+
 interface AuthResponse {
   token: string;
 }
 
-// Get the form and attach a submit event listener
-document.querySelector(".login-form")?.addEventListener("submit", async (e: Event) => {
-  e.preventDefault();
+const form = document.querySelector(".login-form") as HTMLFormElement | null;
+const emailInput = document.getElementById("email") as HTMLInputElement;
+const passwordInput = document.getElementById("password") as HTMLInputElement;
+const errorMessage = document.getElementById("error-message") as HTMLDivElement;
 
-  // Get email and password values
-  const email = (document.getElementById("email") as HTMLInputElement).value;
-  const password = (document.getElementById("password") as HTMLInputElement).value;
+const minimizeButton = document.getElementById("minimize");
+const maximizeButton = document.getElementById("maximize");
+const closeButton = document.getElementById("close");
+
+const windowButtons = [minimizeButton, maximizeButton, closeButton];
+
+windowButtons.forEach((button) => {
+  if (button) {
+    button.addEventListener("click", () => {
+      console.log("Button", button.id);
+      ipcRenderer.send(`${button.id}-window`);
+    });
+  }
+});
+
+const params = new URLSearchParams(window.location.search);
+if (params.get("error") === "1") {
+  errorMessage.textContent = "Login failed. Please check your credentials.";
+  errorMessage.style.display = "block";
+}
+
+const showError = (message: string) => {
+  if (errorMessage) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = "block";
+  } else {
+    console.warn("Error message element not found");
+  }
+};
+
+const resetForm = () => {
+  emailInput.value = "";
+  passwordInput.value = "";
+  emailInput.focus();
+};
+
+console.log("login script loaded");
+
+form?.addEventListener("submit", async (e: Event) => {
+  e.preventDefault();
+  errorMessage.style.display = "none";
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
 
   try {
-    // Make a POST request to the sign-in endpoint
     const response = await fetch("http://localhost:3200/auth/sign-in", {
       method: "POST",
       headers: {
@@ -21,19 +63,17 @@ document.querySelector(".login-form")?.addEventListener("submit", async (e: Even
       body: JSON.stringify({ email, password }),
     });
 
-    if (response.ok) {
-      // Parse the response as JSON and cast it to the AuthResponse interface
-      const data: AuthResponse = await response.json();
-
-      // Store the token in local storage
-      localStorage.setItem("jwtToken", data.token);
-
-      // Redirect to the main app page
-      window.location.href = "index.html";
-    } else {
-      alert("Login failed");
+    if (!response.ok) {
+      ipcRenderer.send("login-failed");
+      return;
     }
+
+    const data: AuthResponse = await response.json();
+    localStorage.setItem("jwtToken", data.token);
+    ipcRenderer.send("login-success");
   } catch (error) {
-    console.error("Error during login", error);
+    console.error("Login error:", error);
+    showError("An error occurred. Please try again.");
+    resetForm();
   }
 });

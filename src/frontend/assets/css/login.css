@@ -2,14 +2,15 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #161616;
+  background-color: #f0f2f5;
   background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px),
     linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
   background-size: 20px 20px;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding-top: 32px; /* Added to account for the titlebar */
+  padding-top: 32px;
+  overflow: hidden;
 }
 
 #titlebar {
@@ -137,6 +138,23 @@ button:hover {
 }
 
 .login-switch a:hover {
+  text-decoration: underline;
+}
+
+.forgot-password {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.forgot-password a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-password a:hover {
   text-decoration: underline;
 }
 

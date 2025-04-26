@@ -10,3 +10,4 @@ uploads/*
 config
 liquibase/*.properties
 database.sqlite
+/out
