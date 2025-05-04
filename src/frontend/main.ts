@@ -14,7 +14,6 @@ export class Main {
   constructor() {
     this.loginFile = path.join(__dirname, "pages/login.html");
     this.server = new Server();
-    this.checkForUpdates();
     this.init();
   }
 
@@ -25,6 +24,7 @@ export class Main {
       this.server.init();
       this.registerIpcEvents();
       this.createWindow();
+      this.checkForUpdates();
     });
   }
 
@@ -53,7 +53,7 @@ export class Main {
 
   private async checkForUpdates() {
     try {
-      console.log("Check for updates and notify called...");
+      console.log("Check for updates and notify...");
       this.updater.checkForUpdatesAndNotify();
 
       this.updater.on("checking-for-update", () => {
@@ -85,8 +85,6 @@ export class Main {
       this.updater.on("error", (error) => {
         console.log("Failed to download the updates", error);
       });
-
-      this.updater.checkForUpdates();
     } catch (error) {
       console.log("An error occured while checking the updates", error);
     }
