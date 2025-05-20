@@ -73,7 +73,7 @@ export default class App {
     });
 
     // Start notification cron
-    this.reminderNotification.start();
+    // this.reminderNotification.start();
   }
 
   public getExpresApp() {

@@ -12,9 +12,9 @@ export class Main {
   private loginFile: string;
 
   constructor() {
-    this.loginFile = path.join(__dirname, "../../renderer/index.html");
+    this.loginFile = path.join(__dirname, "../../client/index.html");
     if (!this.loginFile || this.loginFile === "")
-      console.log("Cannot find index file");
+      console.log("Resolved login file path:", this.loginFile);
     this.server = new Server();
     this.checkForUpdates();
     this.init();
@@ -46,11 +46,12 @@ export class Main {
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-      },
+        webSecurity: false
+      }
     });
 
     // load login file as the application starts
-    this.mainWindow.loadFile(this.loginFile);
+    this.mainWindow.loadFile("http://localhost:5173");
   }
 
   private async checkForUpdates() {

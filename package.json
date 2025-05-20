@@ -22,12 +22,12 @@
     "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
     "dist:win": "electron-builder build --win --x64 --publish always",
     "version": "git add package.json",
-    "dev": "vite",
     "build:frontend": "vite build",
     "build:main": "tsc",
-    "build": "npm run build:main && npm run build:frontend && electron-builder",
+    "build": "npm run build:main && npm run build:frontend",
     "start": "electron .",
-    "dev:electron": "vite build --watch & tsc --watch & electron ."
+    "dev:electron": "vite build --watch & tsc --watch & electron .",
+    "preview": "vite preview"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -46,6 +46,9 @@
     "method-override": "^3.0.0",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "6.22.3",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.37.3",
     "sqlite3": "5.1.6",
