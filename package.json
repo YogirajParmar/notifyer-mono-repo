@@ -9,10 +9,7 @@
     "email": "yogirajparmar44@gmail.com"
   },
   "scripts": {
-    "dev:frontend": "vite",
-    "dev:fe": "electron dist/frontend/main.js",
     "dev:be": "ts-node-dev --respawn -r tsconfig-paths/register --transpile-only src/backend/index.ts",
-    "build:fe": "cd src/frontend && tsc && cd ../.. && yarn copy-fe-assets",
     "build:be": "tsc && tsc-alias",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
@@ -22,9 +19,10 @@
     "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
     "dist:win": "electron-builder build --win --x64 --publish always",
     "version": "git add package.json",
-    "build:frontend": "vite build",
+    "build:fe": "vite build",
+    "dev:frontend": "vite",
     "build:main": "tsc",
-    "build": "npm run build:main && npm run build:frontend",
+    "build": "rm -rf dist && npm run build:main && npm run build:fe",
     "start": "electron .",
     "dev:electron": "vite build --watch & tsc --watch & electron .",
     "preview": "vite preview"

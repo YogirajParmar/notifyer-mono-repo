@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import * as path from "path";
 import Server from "../../backend/serever";
+import { logger } from "../../backend/helpers";
 
 export class Main {
   private mainWindow: BrowserWindow;
@@ -13,8 +14,7 @@ export class Main {
 
   constructor() {
     this.loginFile = path.join(__dirname, "../../client/index.html");
-    if (!this.loginFile || this.loginFile === "")
-      console.log("Resolved login file path:", this.loginFile);
+    logger.log("info", `Login file loaded: ${this.loginFile}`);
     this.server = new Server();
     this.checkForUpdates();
     this.init();
@@ -23,7 +23,6 @@ export class Main {
   public init() {
     // start the application
     this.mainApp.whenReady().then(() => {
-      console.log("This log is from main/main.js file");
       this.server.init();
       this.registerIpcEvents();
       this.createWindow();
@@ -46,22 +45,22 @@ export class Main {
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-        webSecurity: false
-      }
+        webSecurity: false,
+      },
     });
 
     // load login file as the application starts
-    this.mainWindow.loadFile("http://localhost:5173");
+    this.mainWindow.loadFile(this.loginFile);
   }
 
   private async checkForUpdates() {
     try {
       this.updater.on("checking-for-update", () => {
-        console.log("checking for updates...");
+        logger.log("info", "checking for updates...");
       });
 
       this.updater.on("update-not-available", async (info: any) => {
-        console.log("Update available!", info);
+        logger.log("info", `Update available! ${info}`);
 
         const { response } = await dialog.showMessageBox({
           type: "info",
@@ -73,28 +72,31 @@ export class Main {
         });
 
         if (response === 0) {
-          console.log("Downloading update now...");
+          logger.log("info", "Downloading update now...");
           this.updater.downloadUpdate();
         }
       });
 
       this.updater.on("download-progress", (progress) => {
-        console.log("Download in progress", progress);
+        logger.log("info", `Download in progress: ${progress}`);
       });
 
       this.updater.on("error", (error) => {
-        console.log("Failed to download the updates", error);
+        logger.log("info", `Failed to download the updates ${error}`);
       });
 
       this.updater.checkForUpdates();
     } catch (error) {
-      console.log("An error occured while checking the updates", error);
+      logger.log(
+        "info",
+        `An error occured while checking the updates: ${error}`
+      );
     }
   }
 
   private registerIpcEvents() {
     ipcMain.on("ping", (event, arg) => {
-      console.log("Received ping:", arg);
+      logger.log("info", `Received ping: ${arg}`);
       event.reply("pong", "Hello from main");
     });
 
@@ -103,17 +105,17 @@ export class Main {
     });
 
     ipcMain.on("login-failed", (event) => {
-      console.log("login-failed..", this.loginFile);
+      logger.log("info", `login-failed.. ${this.loginFile}`);
       this.mainWindow.loadFile(this.loginFile);
     });
 
     ipcMain.on("sign-up-failed", () => {
-      console.log("Sign up failed");
+      logger.log("info", "Sign up failed");
       this.mainWindow.loadFile(path.join(__dirname, "pages/signup.html"));
     });
 
     ipcMain.on("login-success", () => {
-      console.log("Login successful");
+      logger.log("info", "Login successful");
       this.mainWindow.loadFile(path.join(__dirname, "pages/index.html"));
     });
 

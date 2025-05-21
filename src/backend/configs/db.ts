@@ -1,12 +1,12 @@
 import path from "path";
 import { Sequelize, Options } from "sequelize";
-import { app } from "electron";
+import { logger } from "../helpers";
 
 let sequelize: Sequelize;
 
 export function initDB(config: Options): void {
   if (sequelize) {
-    console.log("Database instance already initialized.");
+    logger.log("info","Database instance already initialized.");
     return;
   }
 
@@ -18,21 +18,9 @@ export function initDB(config: Options): void {
     },
   });
 
-  sequelize
-    .authenticate()
-    .then(() => {
-      console.info("DB Connection has been established successfully.");
-      return sequelize
-        .query("PRAGMA foreign_keys = OFF;")
-        .then(() => sequelize.sync({ alter: true }))
-        .then(() => sequelize.query("PRAGMA foreign_keys = ON;"));
-    })
-    .then(() => {
-      console.info("Database & tables created!");
-    })
-    .catch((error: any) => {
-      console.error(`Unable to connect to the database: ${error}`);
-    });
+  sequelize.authenticate().then(() => {
+    logger.log("info", "DB Connection has been established successfully.")
+  });
 }
 
 export function getSequelize(): Sequelize {
