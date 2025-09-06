@@ -4,10 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../redux/api/auth/authApiSlice';
 
 export const Login = () => {
-  console.log('Login Page - Component is rendering');
   const [email, setEmail] = useState('');
   const [password, setPassWord] = useState('');
-  const [token, setToken] = useState(localStorage.getItem('jwtToken'));
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,6 +15,7 @@ export const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSubmit = async (e) => {
+    setError('');
     e.preventDefault();
     try {
       const result = await login({ email, password }).unwrap();
@@ -29,6 +28,7 @@ export const Login = () => {
       navigate('/home');
     } catch (err) {
       console.error('Login failed:', err);
+      setError(err.data.error);
     }
   };
 
