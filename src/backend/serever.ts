@@ -15,6 +15,7 @@ import { logger } from "./helpers";
 import { ApiLoggerMiddleware } from "./middlewares/logger.middleware";
 import ReminderNotification from "./cron/notification.cron";
 import cors from "cors";
+import { getSequelize } from "./configs/db";
 dotenv.config();
 
 export default class App {
@@ -22,7 +23,7 @@ export default class App {
   private logger = logger;
   private reminderNotification = new ReminderNotification();
 
-  public init() {
+  public async init() {
     // Init DB
     initDB({
       dialect: "sqlite",
@@ -38,6 +39,15 @@ export default class App {
     // Ensure models are initialized
     User;
     PUC;
+
+    // Sync database to create tables
+    const sequelize = getSequelize();
+    try {
+      await sequelize.sync({ force: false });
+      this.logger.log("info", "Database tables synchronized successfully.");
+    } catch (error) {
+      this.logger.log("error", `Database sync failed: ${error}`);
+    }
 
     // Init Express
     this.app = express();
@@ -68,7 +78,7 @@ export default class App {
     this.app.listen(process.env.PORT || 3200, () => {
       this.logger.log(
         "info",
-        `The server is running in port localhost: ${process.env.PORT}`
+        `The server is running in port localhost: ${process.env.PORT || 3200}`
       );
     });
 

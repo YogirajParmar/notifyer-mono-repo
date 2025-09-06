@@ -16,6 +16,7 @@ export function initDB(config: Options): void {
       ...config.dialectOptions,
       foreign_keys: false,
     },
+    logging: false,
   });
 
   sequelize.authenticate().then(() => {

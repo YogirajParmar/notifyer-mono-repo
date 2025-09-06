@@ -10,11 +10,10 @@ export class Main {
   private mainApp = app;
   private updater = autoUpdater;
 
-  private loginFile: string;
+  private indexPage: string;
 
   constructor() {
-    this.loginFile = path.join(__dirname, "../../client/index.html");
-    logger.log("info", `Login file loaded: ${this.loginFile}`);
+    this.indexPage = path.join(__dirname, "../index.html");
     this.server = new Server();
     this.checkForUpdates();
     this.init();
@@ -22,8 +21,8 @@ export class Main {
 
   public init() {
     // start the application
-    this.mainApp.whenReady().then(() => {
-      this.server.init();
+    this.mainApp.whenReady().then(async () => {
+      await this.server.init();
       this.registerIpcEvents();
       this.createWindow();
     });
@@ -45,12 +44,16 @@ export class Main {
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
-        webSecurity: false,
       },
     });
 
-    // load login file as the application starts
-    this.mainWindow.loadFile(this.loginFile);
+    if (process.env.NODE_ENV === "development") {
+      this.mainWindow.loadURL("http://localhost:5173");
+    } else {
+      const indexPath = path.join(__dirname, "../renderer/index.html");
+      console.log("Loading production index.html from:", indexPath);
+      this.mainWindow.loadFile(indexPath);
+    }
   }
 
   private async checkForUpdates() {
@@ -105,8 +108,8 @@ export class Main {
     });
 
     ipcMain.on("login-failed", (event) => {
-      logger.log("info", `login-failed.. ${this.loginFile}`);
-      this.mainWindow.loadFile(this.loginFile);
+      logger.log("info", `login-failed.. ${this.indexPage}`);
+      this.mainWindow.loadFile(this.indexPage);
     });
 
     ipcMain.on("sign-up-failed", () => {

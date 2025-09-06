@@ -9,24 +9,38 @@ export const SignUp = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("jwtToken"));
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:3200/auth/sign-up", {
-      method: "POST",
-      body: JSON.stringify({ firstName, lastName, email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
+    setError("");
+    setLoading(true);
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Error:", errorData);
+    try {
+      const response = await fetch("http://localhost:3200/auth/sign-up", {
+        method: "POST",
+        body: JSON.stringify({ firstName, lastName, email, password }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setToken(data.token);
+        localStorage.setItem("jwtToken", data.token);
+        // Redirect to home page or handle successful signup
+        window.location.hash = "#/home";
+      } else {
+        setError(data.error || "Sign-up failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Sign-up error:", error);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
-
-    const data = await response.json();
-    setToken(data.token);
-    localStorage.setItem("token", data.token);
   };
 
   return token ? (
@@ -56,6 +70,19 @@ export const SignUp = () => {
             }}
           >
             <h2>Sign Up</h2>
+            {error && (
+              <div style={{
+                color: 'red',
+                marginBottom: '1rem',
+                textAlign: 'center',
+                padding: '0.5rem',
+                backgroundColor: '#fee',
+                borderRadius: '4px',
+                border: '1px solid #fcc'
+              }}>
+                {error}
+              </div>
+            )}
             <div className="form-group">
               <label htmlFor="firstname">First Name</label>
               <input
@@ -96,7 +123,19 @@ export const SignUp = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <button type="submit">Sign Up</button>
+            <button type="submit" disabled={loading} style={{
+              width: '100%',
+              padding: '0.75rem',
+              backgroundColor: loading ? '#ccc' : '#333',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              fontSize: '1rem',
+              fontWeight: 500,
+              cursor: loading ? 'not-allowed' : 'pointer'
+            }}>
+              {loading ? 'Signing up...' : 'Sign Up'}
+            </button>
             <p className="signup-switch">
               Already have an account? <Link to="/">log in</Link>
             </p>
