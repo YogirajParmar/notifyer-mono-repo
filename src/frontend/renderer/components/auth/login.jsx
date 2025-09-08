@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../assets/css/login.css";
-import { useLoginMutation } from "../redux/api/auth/authApiSlice";
+import { Link, useNavigate } from "react-router-dom";
+import "../../assets/css/login.css";
+import { useLoginMutation } from "../../redux/api/auth/authApiSlice";
 import React from "react";
 
 export const Login = () => {
@@ -80,7 +80,9 @@ export const Login = () => {
           </form>
 
           <div className="links">
-            <a href="#">Forget your password</a>
+            <Link to="/reset-password">
+              Forget your password
+            </Link>
           </div>
         </div>
 

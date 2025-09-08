@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import "../assets/css/signup.css";
+import "../../assets/css/signup.css";
 import { Link, useNavigate } from "react-router-dom";
-import { useSignupMutation } from "../redux/api/auth/authApiSlice";
+import { useSignupMutation } from "../../redux/api/auth/authApiSlice";
 
 export const SignUp = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);

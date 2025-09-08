@@ -1,6 +1,5 @@
-// filepath: /Users/yogirajsinhparmar/Documents/personal/docalert/src/frontend/renderer/pages/reset-password.jsx
 import React, { useState } from "react";
-import "../assets/css/reset-password.css";
+import "../../assets/css/reset-password.css";
 
 export const ResetPassword = () => {
   const [email, setEmail] = useState("");

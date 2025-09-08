@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { App } from './pages/app';
+import { App } from './components/app';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';

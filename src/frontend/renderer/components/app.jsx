@@ -1,8 +1,8 @@
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import { Login } from "./login";
-import { SignUp } from "./sign-up";
-import { HomePage } from "./home";
-import { ResetPassword } from "./reset-password";
+import { Login } from "./auth/login";
+import { SignUp } from "./auth/sign-up";
+import { HomePage } from "./home/home";
+import { ResetPassword } from "./auth/reset-password";
 import React from "react";
 
 export const App = () => {

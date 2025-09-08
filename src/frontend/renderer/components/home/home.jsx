@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../assets/css/index.css";
+import "../../assets/css/index.css";
 
 export const HomePage = () => {
   const [documents, setDocuments] = useState([]);
