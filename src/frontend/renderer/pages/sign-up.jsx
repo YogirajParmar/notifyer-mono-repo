@@ -1,147 +1,148 @@
-import { useState } from "react";
-import { HomePage } from "./home";
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import "../assets/css/signup.css";
+import { Link, useNavigate } from "react-router-dom";
+import { useSignupMutation } from "../redux/api/auth/authApiSlice";
 
 export const SignUp = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState(localStorage.getItem("jwtToken"));
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [signUp, { isLoading }] = useSignupMutation();
+
+  const navigate = useNavigate();
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
+    setLoading(isLoading);
 
     try {
-      const response = await fetch("http://localhost:3200/auth/sign-up", {
-        method: "POST",
-        body: JSON.stringify({ firstName, lastName, email, password }),
-        headers: { "Content-Type": "application/json" },
-      });
+      const result = await signUp({
+        email,
+        password,
+        firstName,
+        lastName,
+      }).unwrap();
+      setLoading(isLoading);
 
-      const data = await response.json();
+      // save auth token
+      localStorage.setItem("jwtToken", result.token);
 
-      if (response.ok) {
-        setToken(data.token);
-        localStorage.setItem("jwtToken", data.token);
-        // Redirect to home page or handle successful signup
-        window.location.hash = "#/home";
-      } else {
-        setError(data.error || "Sign-up failed. Please try again.");
-      }
+      // navigate to home
+      navigate("/home");
     } catch (error) {
-      console.error("Sign-up error:", error);
-      setError("Network error. Please check your connection and try again.");
-    } finally {
-      setLoading(false);
+      console.log("Error occured: ", error);
+      setError(err.data.error);
     }
   };
 
-  return token ? (
-    <HomePage />
-  ) : (
-    <>
-      <div id="titlebar">
-        <div id="window-controls">
-          <button id="minimize">
-            <i className="material-icons">remove</i>
-          </button>
-          <button id="maximize">
-            <i className="material-icons">crop_square</i>
-          </button>
-          <button id="close">
-            <i className="material-icons">close</i>
-          </button>
+  console.log({ email, password, firstName, lastName });
+
+  return (
+    <div className="signup-page">
+      <div class="container">
+        <div className="top-right-link">
+          <p className="link-text">
+            Already have an account?{" "}
+            <Link to="/" className="login-link">
+              {" "}
+              login here
+            </Link>
+          </p>
         </div>
-      </div>
-      <div className="content">
-        <div className="signup-container">
-          <form
-            className="signup-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit(e);
-            }}
-          >
-            <h2>Sign Up</h2>
-            {error && (
-              <div style={{
-                color: 'red',
-                marginBottom: '1rem',
-                textAlign: 'center',
-                padding: '0.5rem',
-                backgroundColor: '#fee',
-                borderRadius: '4px',
-                border: '1px solid #fcc'
-              }}>
-                {error}
-              </div>
-            )}
-            <div className="form-group">
-              <label htmlFor="firstname">First Name</label>
+        <div class="logo-placeholder"></div>
+        <div class="signup-card">
+          <h1 class="card-title">Create an account</h1>
+
+          <form onSubmit={handleSignUp}>
+            <div class="form-group">
               <input
+                id="first-name"
+                name="first-name"
                 type="text"
-                id="firstname"
-                name="firstname"
                 required
+                class="form-input"
+                value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
+                placeholder="First Name"
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="lastName">Last Name</label>
+
+            <div class="form-group">
               <input
                 type="text"
-                id="lastName"
-                name="lastName"
                 required
+                class="form-input"
+                value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
+                placeholder="Last Name"
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                onChange={(e) => setEmail(e.target.value)}
-              />
+
+            <div class="form-group">
+              <div class="tooltip">
+                <input
+                  required
+                  class="form-input"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                onChange={(e) => setPassword(e.target.value)}
-              />
+
+            <div class="form-group">
+              <div class="input-with-icon">
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  required
+                  class="form-input"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span
+                  class="input-icon"
+                  onClick={() => setPasswordVisible((v) => !v)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {passwordVisible ? "Hide" : "Show"}
+                </span>
+              </div>
+              <div class="password-tooltip">
+                <div>
+                  <div class="tooltip-icon"></div>
+                  <span>Use 8 or more characters</span>
+                </div>
+                <div>
+                  <div class="tooltip-icon"></div>
+                  <span>Use upper and lower case letters (e.g. Aa)</span>
+                </div>
+                <div>
+                  <div class="tooltip-icon"></div>
+                  <span>Use a number (e.g. 1234)</span>
+                </div>
+                <div>
+                  <div class="tooltip-icon"></div>
+                  <span>Use a symbol (e.g. !@#$)</span>
+                </div>
+              </div>
             </div>
-            <button type="submit" disabled={loading} style={{
-              width: '100%',
-              padding: '0.75rem',
-              backgroundColor: loading ? '#ccc' : '#333',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              fontSize: '1rem',
-              fontWeight: 500,
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }}>
-              {loading ? 'Signing up...' : 'Sign Up'}
+
+            {error && <div className="error">{error}</div>}
+
+            <button type="submit" class="button-primary">
+              Sign up
             </button>
-            <p className="signup-switch">
-              Already have an account? <Link to="/">log in</Link>
-            </p>
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };

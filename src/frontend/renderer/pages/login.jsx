@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import '../assets/css/login.css';
-import { useNavigate } from 'react-router-dom';
-import { useLoginMutation } from '../redux/api/auth/authApiSlice';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../assets/css/login.css";
+import { useLoginMutation } from "../redux/api/auth/authApiSlice";
+import React from "react";
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassWord] = useState('');
-  const [error, setError] = useState('');
+  console.log("Login componenet loading..");
+  const [email, setEmail] = useState("");
+  const [password, setPassWord] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [login, { isLoading }] = useLoginMutation();
@@ -15,19 +17,19 @@ export const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSubmit = async (e) => {
-    setError('');
+    setError("");
     e.preventDefault();
     try {
       const result = await login({ email, password }).unwrap();
-      console.log('Login success:', result);
+      console.log("Login success:", result);
 
       // save token locally
-      localStorage.setItem('jwtToken', result.token);
+      localStorage.setItem("jwtToken", result.token);
 
       // redirect to home
-      navigate('/home');
+      navigate("/home");
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error("Login failed:", err);
       setError(err.data.error);
     }
   };
@@ -36,13 +38,13 @@ export const Login = () => {
     <div className="login-page">
       <div className="container">
         <div className="avatar"></div>
-        <div className="card">
+        <div className="login-card">
           <h2>Sign in</h2>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
               className="input-field"
-              placeholder="Email or mobile phone number"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -50,7 +52,7 @@ export const Login = () => {
 
             <div className="password-wrapper">
               <input
-                type={passwordVisible ? 'text' : 'password'}
+                type={passwordVisible ? "text" : "password"}
                 id="password"
                 className="input-field"
                 placeholder="Your password"
@@ -61,9 +63,9 @@ export const Login = () => {
               <span
                 className="toggle-password"
                 onClick={() => setPasswordVisible((v) => !v)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
-                {passwordVisible ? 'Hide' : 'Show'}
+                {passwordVisible ? "Hide" : "Show"}
               </span>
             </div>
 
@@ -73,7 +75,7 @@ export const Login = () => {
               type="submit"
               disabled={loading || !email || !password}
             >
-              {loading ? 'Logging in...' : 'Log in'}
+              {loading ? "Logging in..." : "Log in"}
             </button>
           </form>
 
@@ -83,7 +85,7 @@ export const Login = () => {
         </div>
 
         <div className="divider">New to our community</div>
-        <button className="create-btn">Create an account</button>
+        <button className="create-btn" onClick={() => navigate("/signup")}>Create an account</button>
 
         <div className="footer">
           <span>© 2023 Vehicle Document Manager. All rights reserved.n</span>
