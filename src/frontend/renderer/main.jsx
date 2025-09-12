@@ -3,6 +3,7 @@ import { App } from './components/app';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import './assets/css/index.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -9,6 +9,10 @@
   min-height: 100vh;
 } */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 header {
   background-color: #2c3e50;
   color: #ecf0f1;
@@ -217,7 +221,7 @@ footer {
   display: flex;
   -webkit-app-region: no-drag;
 }
-
+/* 
 #window-controls button {
   width: 46px;
   height: 32px;
@@ -227,11 +231,11 @@ footer {
   font-size: 10px;
   -webkit-app-region: no-drag;
   cursor: pointer;
-}
+} */
 
-#window-controls button:hover {
+/* #window-controls button:hover {
   background: rgba(0, 0, 0, 0.1);
-}
+} */
 
 #close:hover {
   background: #e81123 !important;
@@ -328,19 +332,19 @@ footer {
   background-color: transparent;
 }
 
-.search-container button {
+/* .search-container button {
   background-color: #3498db;
   border: none;
   color: white;
   padding: 12px 16px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
+} */
 
-.search-container button:hover {
+/* .search-container button:hover {
   background-color: white;
   color: #3498db;
-}
+} */
 
 .material-icons {
   font-size: 20px;
@@ -352,7 +356,7 @@ footer {
   margin: 20px auto;
   overflow: hidden;
 }
-.reset button {
+/* .reset button {
   background-color: #3498db;
   border: none;
   border-radius: 8px;
@@ -361,7 +365,7 @@ footer {
   cursor: pointer;
   font-size: medium;
   transition: background-color 0.3s ease;
-}
+} */
 
 @media (max-width: 768px) {
   .expiring-item {

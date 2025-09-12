@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.0",
+    "@tanstack/react-table": "^8.21.3",
+    "autoprefixer": "^10.4.21",
     "bcrypt": "^6.0.0",
     "body-parser": "^1.20.2",
     "class-validator": "^0.14.0",
@@ -44,6 +46,7 @@
     "method-override": "^3.0.0",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
+    "postcss": "^8.5.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-redux": "^9.2.0",
@@ -51,10 +54,12 @@
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.37.3",
     "sqlite3": "5.1.6",
+    "tailwindcss": "^4.1.13",
     "winston": "^3.14.2",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/compression": "^1.7.2",

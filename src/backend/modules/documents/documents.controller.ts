@@ -49,7 +49,7 @@ export class DocumentController {
       }
 
       const userDocuments = await PUC.findAll({ where: { userId: user.id } });
-      if (!userDocuments.length) {
+      if (!userDocuments) {
         return res.status(404).json({ error: "No documents found" });
       }
 
