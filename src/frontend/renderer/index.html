@@ -12,14 +12,15 @@
         default-src 'self';
         script-src 'self';
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-        img-src 'self' data:;
+        img-src 'self' data: blob:;
         font-src 'self' https://fonts.gstatic.com;
         connect-src 'self' http://localhost:3200 https://localhost:3200;
       "
     />
 
-    <link rel="stylesheet" href="./assets/css/index.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png" />
+    <link rel="icon" href="/icon/favicon.ico">
   </head>
   <body>
     <div id="root"></div>

@@ -25,14 +25,8 @@ export function HomePage() {
           </div>
         )}
 
-        {!isLoading && data.length > 0 && (
+        {!isLoading && !isError && (
           <TableWithPagination data={data}></TableWithPagination>
-        )}
-
-        {!isLoading && !isError && data.length === 0 && (
-          <div className='text-center py-8 text-gray-500'>
-            <p>No documents found.</p>
-          </div>
         )}
       </div>
     </div>
