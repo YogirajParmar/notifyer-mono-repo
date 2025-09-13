@@ -25,8 +25,22 @@ export const documentApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['documents'],
     }),
+
+    /**
+     * Get document stats
+     */
+    getStats: builder.query({
+      query: () => ({
+        url: 'docs/stats',
+        method: 'GET',
+      }),
+      providesTags: ['stats'],
+    }),
   }),
 });
 
-export const { useGetDocumentsQuery, useCreateDocumentMutation } =
-  documentApiSlice;
+export const {
+  useGetDocumentsQuery,
+  useCreateDocumentMutation,
+  useGetStatsQuery,
+} = documentApiSlice;

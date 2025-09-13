@@ -3,15 +3,28 @@ import React, { useState, useEffect } from 'react';
 import {
   useCreateDocumentMutation,
   useGetDocumentsQuery,
+  useGetStatsQuery,
 } from '../../redux/api/documents/documentApiSlice';
 import { TableWithPagination } from './table';
 import { UploadForm } from './upload-form';
 import { WarningCards } from './warning-cards';
+import { Stats } from './stats';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 
 export function HomePage() {
   const { data = [], isLoading, isError } = useGetDocumentsQuery();
+  const { data: stats, isLoading: isStatsLoading, isError: isStatsError, error: statsError } = useGetStatsQuery();
+  
+  let totalDocuments = 0;
+  let expieredDocs = 0;
+  let expiringThisMonth = 0;
+
+  if (stats) {
+    totalDocuments = stats.totalDocuments ?? 0;
+    expieredDocs = stats.expieredDocs ?? 0;
+    expiringThisMonth = stats.expiringThisMonth ?? 0;
+  }
 
   const [createDocument] = useCreateDocumentMutation();
 
@@ -82,6 +95,18 @@ export function HomePage() {
       </div>
       {/* <div className='p-4 bg-gray-50 font-sans'> */}
       <div className='p-4 bg-gray-50 font-sans'>
+        <div className='w-full max-w-6xl mx-auto'>
+          {isStatsLoading && <p>Loading stats...</p>}
+          {isStatsError && toast.error(`Error fetching stats: ${statsError?.message || 'Unknown error'}`) }
+          {!isStatsLoading && !isStatsError && stats && (
+            <Stats
+              totalDocuments={totalDocuments}
+              expieredDocs={expieredDocs}
+              expiringThisMonth={expiringThisMonth}
+            />
+          )}
+        </div>
+
         <div className='w-full max-w-6xl px-6 py-3 mx-auto my-5 shadow-lg rounded-xl'>
           <WarningCards documents={expiringDocuments} />
         </div>
