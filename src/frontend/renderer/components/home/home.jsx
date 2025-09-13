@@ -82,7 +82,7 @@ export function HomePage() {
       </div>
       {/* <div className='p-4 bg-gray-50 font-sans'> */}
       <div className='p-4 bg-gray-50 font-sans'>
-        <div className='w-full max-w-6xl mx-auto my-5 shadow-lg rounded-xl'>
+        <div className='w-full max-w-6xl px-6 py-3 mx-auto my-5 shadow-lg rounded-xl'>
           <WarningCards documents={expiringDocuments} />
         </div>
 
