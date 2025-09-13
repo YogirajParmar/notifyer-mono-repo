@@ -104,8 +104,8 @@ export function HomePage() {
         ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
           {/* Header */}
-          <div className='flex justify-between items-center p-4 border-b'>
-            <h2 className='text-lg font-semibold'>Upload Document</h2>
+          <div className='flex justify-between items-center px-4 border-b'>
+            <h2 className='text-lg font-semibold pt-6'>Upload Document</h2>
             <button
               onClick={() => setIsOpen(false)}
               className='text-gray-600 hover:text-gray-900'
