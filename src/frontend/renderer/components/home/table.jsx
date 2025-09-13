@@ -2,11 +2,60 @@ import React, { useState } from 'react';
 
 export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
+
+  const getStatusValue = (doc) => {
+    const expired = isDocumentExpired(doc.expirationDate);
+    const expiringSoon = isDocumentExpiringSoon(doc.expirationDate);
+
+    if (expired) return 0; // Expired
+    if (expiringSoon) return 1; // Expiring Soon
+    return 2; // Valid
+  };
+
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      console.log('sortDirection', sortDirection);
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+    setCurrentPage(1); // Reset to first page on sort
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    if (!sortColumn) return 0;
+
+    let aValue;
+    let bValue;
+
+    switch (sortColumn) {
+      case 'status':
+        aValue = getStatusValue(a);
+        bValue = getStatusValue(b);
+        break;
+      case 'issueDate':
+      case 'expirationDate':
+        aValue = new Date(a[sortColumn]).getTime();
+        bValue = new Date(b[sortColumn]).getTime();
+        break;
+      default: // For text fields: vehicleNumber, vehicleType, documentType
+        aValue = a[sortColumn].toLowerCase();
+        bValue = b[sortColumn].toLowerCase();
+        break;
+    }
+
+    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   // Calculate pagination
-  const totalPages = Math.ceil(data.length / rowsPerPage);
+  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentData = data.slice(startIndex, startIndex + rowsPerPage);
+  const currentData = sortedData.slice(startIndex, startIndex + rowsPerPage);
 
   // Pagination helpers
   const goToPage = (page) => {
@@ -76,6 +125,13 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
     );
   }
 
+  const renderSortIndicator = (column) => {
+    if (sortColumn === column) {
+      return sortDirection === 'asc' ? '▲' : '▼';
+    }
+    return '';
+  };
+
   return (
     <div className='p-6'>
       {/* Table Header with Stats */}
@@ -86,7 +142,7 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
           </h2>
           <p className='text-sm text-gray-600 mt-1'>
             Showing {startIndex + 1}-
-            {Math.min(startIndex + rowsPerPage, data.length)} of {data.length}{' '}
+            {Math.min(startIndex + rowsPerPage, sortedData.length)} of {sortedData.length}{' '}
             documents
           </p>
         </div>
@@ -101,23 +157,41 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
           <table className='w-full'>
             <thead className='bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200'>
               <tr>
-                <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>
-                  Vehicle No.
+                <th
+                  className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
+                  onClick={() => handleSort('vehicleNumber')}
+                >
+                  Vehicle No.{renderSortIndicator('vehicleNumber')}
                 </th>
-                <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>
-                  Vehicle Type
+                <th
+                  className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
+                  onClick={() => handleSort('vehicleType')}
+                >
+                  Vehicle Type{renderSortIndicator('vehicleType')}
                 </th>
-                <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>
-                  Issue Date
+                <th
+                  className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
+                  onClick={() => handleSort('issueDate')}
+                >
+                  Issue Date{renderSortIndicator('issueDate')}
                 </th>
-                <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>
-                  Expiry Date
+                <th
+                  className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
+                  onClick={() => handleSort('expirationDate')}
+                >
+                  Expiry Date{renderSortIndicator('expirationDate')}
                 </th>
-                <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>
-                  Document Type
+                <th
+                  className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
+                  onClick={() => handleSort('documentType')}
+                >
+                  Document Type{renderSortIndicator('documentType')}
                 </th>
-                <th className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider'>
-                  Status
+                <th
+                  className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
+                  onClick={() => handleSort('status')}
+                >
+                  Status{renderSortIndicator('status')}
                 </th>
               </tr>
             </thead>
