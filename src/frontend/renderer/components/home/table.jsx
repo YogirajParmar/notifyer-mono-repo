@@ -213,7 +213,7 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
                       </div>
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
-                      <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800'>
+                      <span className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600'>
                         {doc.vehicleType}
                       </span>
                     </td>
@@ -224,7 +224,7 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
                       {formatDate(doc.expirationDate)}
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
-                      <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800'>
+                      <span className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-600'>
                         {doc.documentType}
                       </span>
                     </td>
