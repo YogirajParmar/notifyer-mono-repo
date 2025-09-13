@@ -142,8 +142,8 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
           </h2>
           <p className='text-sm text-gray-600 mt-1'>
             Showing {startIndex + 1}-
-            {Math.min(startIndex + rowsPerPage, sortedData.length)} of {sortedData.length}{' '}
-            documents
+            {Math.min(startIndex + rowsPerPage, sortedData.length)} of{' '}
+            {sortedData.length} documents
           </p>
         </div>
         <div className='text-sm text-gray-500'>
@@ -326,7 +326,7 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
   );
 };
 
-const formatDate = (date) => {
+export const formatDate = (date) => {
   const newDate = new Date(date);
   return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()}`;
 };
