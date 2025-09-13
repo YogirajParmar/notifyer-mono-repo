@@ -30,6 +30,6 @@
     "src/frontend/electron.ts",
     "src/backend",
     "src/frontend/main"
-  ],
+, "src/frontend/renderer/components/home/old-code.jsx"  ],
   "exclude": ["node_modules", "dist"]
 }
