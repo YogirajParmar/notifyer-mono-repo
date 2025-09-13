@@ -20,7 +20,11 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
     const range = [];
     const rangeWithDots = [];
 
-    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+    for (
+      let i = Math.max(2, currentPage - delta);
+      i <= Math.min(totalPages - 1, currentPage + delta);
+      i++
+    ) {
       range.push(i);
     }
 
@@ -47,12 +51,26 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
       <div className='p-6'>
         <div className='text-center py-12'>
           <div className='mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
-            <svg className='w-12 h-12 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
+            <svg
+              className='w-12 h-12 text-gray-400'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'
+              />
             </svg>
           </div>
-          <h3 className='text-lg font-medium text-gray-900 mb-2'>No documents found</h3>
-          <p className='text-gray-500'>Add your first vehicle document to get started.</p>
+          <h3 className='text-lg font-medium text-gray-900 mb-2'>
+            No documents found
+          </h3>
+          <p className='text-gray-500'>
+            Add your first vehicle document to get started.
+          </p>
         </div>
       </div>
     );
@@ -63,9 +81,13 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
       {/* Table Header with Stats */}
       <div className='flex justify-between items-center mb-6'>
         <div>
-          <h2 className='text-xl font-semibold text-gray-900'>Documents</h2>
+          <h2 className='text-xl font-semibold text-gray-900'>
+            Documents uploaded
+          </h2>
           <p className='text-sm text-gray-600 mt-1'>
-            Showing {startIndex + 1}-{Math.min(startIndex + rowsPerPage, data.length)} of {data.length} documents
+            Showing {startIndex + 1}-
+            {Math.min(startIndex + rowsPerPage, data.length)} of {data.length}{' '}
+            documents
           </p>
         </div>
         <div className='text-sm text-gray-500'>
@@ -101,9 +123,11 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
             </thead>
             <tbody className='bg-white divide-y divide-gray-200'>
               {currentData.map((doc, index) => {
-                const isExpiringSoon = isDocumentExpiringSoon(doc.expirationDate);
+                const isExpiringSoon = isDocumentExpiringSoon(
+                  doc.expirationDate
+                );
                 const isExpired = isDocumentExpired(doc.expirationDate);
-                
+
                 return (
                   <tr
                     key={index}
@@ -156,18 +180,28 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
       {/* Enhanced Pagination Controls */}
       {totalPages > 1 && (
         <div className='flex items-center justify-between mt-6'>
-          <div className='flex items-center space-x-2'>
+          <div className='flex items-center justify-end space-x-2 w-full'>
             <button
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
               className='inline-flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150'
             >
-              <svg className='w-4 h-4 mr-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 19l-7-7 7-7' />
+              <svg
+                className='w-4 h-4 mr-1'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M15 19l-7-7 7-7'
+                />
               </svg>
               Previous
             </button>
-            
+
             <div className='flex items-center space-x-1'>
               {getVisiblePages().map((page, index) => (
                 <button
@@ -178,30 +212,40 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
                     page === currentPage
                       ? 'bg-blue-600 text-white shadow-sm'
                       : page === '...'
-                      ? 'text-gray-400 cursor-default'
-                      : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                        ? 'text-gray-400 cursor-default'
+                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                   }`}
                 >
                   {page}
                 </button>
               ))}
             </div>
-            
+
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
               className='inline-flex items-center px-3 py-2 text-sm font-small text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150'
             >
               Next
-              <svg className='w-4 h-4 ml-1' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+              <svg
+                className='w-4 h-4 ml-1'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M9 5l7 7-7 7'
+                />
               </svg>
             </button>
           </div>
-          
-          <div className='text-sm text-gray-500'>
+
+          {/* <div className='text-sm text-gray-500'>
             {startIndex + 1}-{Math.min(startIndex + rowsPerPage, data.length)} of {data.length} results
-          </div>
+          </div> */}
         </div>
       )}
     </div>
@@ -224,6 +268,6 @@ const isDocumentExpiringSoon = (expirationDate) => {
   const expiry = new Date(expirationDate);
   const thirtyDaysFromNow = new Date();
   thirtyDaysFromNow.setDate(today.getDate() + 30);
-  
+
   return expiry >= today && expiry <= thirtyDaysFromNow;
 };

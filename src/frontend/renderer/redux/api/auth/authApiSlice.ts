@@ -3,6 +3,9 @@ import { SignUp } from './auth.types';
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    /**
+     * Login
+     */
     login: builder.mutation({
       query: (credentials: { email: string; password: string }) => ({
         url: '/auth/sign-in',
@@ -11,13 +14,16 @@ export const authApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    /**
+     * Sign up
+     */
     signup: builder.mutation({
       query: (credentials: SignUp) => ({
         url: '/auth/sign-up',
         method: 'POST',
-        body: credentials
-      })
-    })
+        body: credentials,
+      }),
+    }),
   }),
 });
 
