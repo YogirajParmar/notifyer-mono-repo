@@ -119,12 +119,6 @@ export class DocumentController {
       // End of current month
       const currentMonthEnd = new Date(currentYear, currentMonth + 1, 0);
 
-      console.log(currentMonthStart, currentMonthEnd);
-      logger.log(
-        'info',
-        JSON.stringify({ data: { currentMonthStart, currentMonthEnd } })
-      );
-
       const expiringThisMonth = await PUC.count({
         where: {
           userId: user.id,
@@ -134,14 +128,6 @@ export class DocumentController {
         },
       });
 
-      console.log(
-        'returing : ',
-        JSON.stringify({
-          totalDocuments,
-          expieredDocs,
-          expiringThisMonth,
-        })
-      );
       res.json({
         totalDocuments,
         expieredDocs,
