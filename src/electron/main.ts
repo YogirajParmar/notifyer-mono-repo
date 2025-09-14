@@ -1,8 +1,8 @@
 import { app, BrowserWindow, dialog, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as path from 'path';
-import Server from '../../backend/serever';
-import { logger } from '../../backend/helpers';
+import Server from '../backend/serever';
+import { logger } from '../backend/helpers';
 
 export class Main {
   private mainWindow: BrowserWindow;

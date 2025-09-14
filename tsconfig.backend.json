@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/backend",
+    "rootDir": "./src/backend",
+    "paths": {
+      "@backend/*": ["backend/*"],
+      "@helpers": ["backend/helpers/*"],
+      "@configs": ["backend/configs/*"],
+      "@entities": ["backend/entities/*"],
+      "@types": ["backend/types/*"],
+      "@modules": ["backend/modules/*"],
+      "@middlewares": ["backend/middlewares/*"],
+      "@acl": ["backend/acl/*"]
+    }
+  },
+  "include": ["src/backend"]
+}

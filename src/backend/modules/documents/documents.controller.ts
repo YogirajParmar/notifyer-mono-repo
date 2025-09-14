@@ -2,7 +2,7 @@ import { TRequest, TResponse } from '../../types';
 import { PUC, User } from '../../entities';
 import { CreatePUCDto } from './dto';
 import { Op } from 'sequelize';
-import { logger } from '@backend/helpers';
+import { logger } from '../../helpers';
 
 export class DocumentController {
   constructor() {}
