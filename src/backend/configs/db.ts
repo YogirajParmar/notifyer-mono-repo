@@ -26,8 +26,8 @@ export function initDB(config: Options): void {
 }
 
 export function getSequelize(): Sequelize {
-  const dbPath = path.join(app.getPath('userData'), 'database.sqlite');
-  // const dbPath = path.join(__dirname, "database.sqlite");
+  // const dbPath = path.join(app.getPath('userData'), 'database.sqlite');
+  const dbPath = path.join(__dirname, 'database.sqlite');
   if (!sequelize) {
     initDB({
       dialect: 'sqlite',
