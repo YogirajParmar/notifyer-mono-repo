@@ -23,7 +23,7 @@ export const documentApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: document,
       }),
-      invalidatesTags: ['documents'],
+      invalidatesTags: ['documents', 'stats'],
     }),
 
     /**
