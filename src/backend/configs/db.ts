@@ -5,6 +5,14 @@ import { app } from 'electron';
 
 let sequelize: Sequelize;
 
+function resolveDBPath(): string {
+  if (!app) {
+    return path.resolve(__dirname, '../../.dev-db/database.sqlite');
+  } else {
+    return path.join(app.getPath('userData'), 'database.sqlite');
+  }
+}
+
 export function initDB(config: Options): void {
   if (sequelize) {
     logger.log('info', 'Database instance already initialized.');
@@ -25,10 +33,11 @@ export function initDB(config: Options): void {
   });
 }
 
+// TODO: Update database path for production
 export function getSequelize(): Sequelize {
-  // const dbPath = path.join(app.getPath('userData'), 'database.sqlite');
-  const dbPath = path.join(__dirname, 'database.sqlite');
   if (!sequelize) {
+    const dbPath = resolveDBPath();
+
     initDB({
       dialect: 'sqlite',
       database: 'shivam',
@@ -38,7 +47,6 @@ export function getSequelize(): Sequelize {
       port: 3306,
       storage: dbPath,
     });
-    // throw new Error('Database not initialized. Call initDB() first.');
   }
   return sequelize;
 }

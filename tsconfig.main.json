@@ -8,6 +8,6 @@
       "@electron/*": ["electron/*"]
     }
   },
-  "include": ["src/electron", "src/backend"],
-  "exclude": ["src/renderer"]
+  "include": ["src/electron"],
+  "exclude": ["src/renderer",  "src/backend"]
 }
