@@ -14,5 +14,5 @@
       "@acl": ["backend/acl/*"]
     }
   },
-  "include": ["src/backend"]
+  "include": ["src/backend/**/*"]
 }
