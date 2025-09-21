@@ -34,12 +34,7 @@ export class Main {
       minimizable: true,
       maximizable: true,
       closable: true,
-      icon: path.join(
-        __dirname,
-        'assets',
-        'icons',
-        'android-chrome-192x192.png'
-      ),
+      icon: this.resolveIconPath(),
       center: true,
       webPreferences: {
         nodeIntegration: true,
@@ -139,6 +134,12 @@ export class Main {
     ipcMain.on('close-window', () => {
       this.mainWindow.close();
     });
+  }
+
+  private resolveIconPath() {
+    return this.mainApp.isPackaged
+      ? path.join(process.resourcesPath, 'dist', 'renderer', 'icon', 'android-chrome-192x192.png')
+      : path.join(process.cwd(), 'public', 'android-chrome-192x192.png');
   }
 }
 
