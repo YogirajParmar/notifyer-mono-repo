@@ -33,7 +33,6 @@ export function initDB(config: Options): void {
   });
 }
 
-// TODO: Update database path for production
 export function getSequelize(): Sequelize {
   if (!sequelize) {
     const dbPath = resolveDBPath();

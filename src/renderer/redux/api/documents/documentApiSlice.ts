@@ -27,6 +27,29 @@ export const documentApiSlice = apiSlice.injectEndpoints({
     }),
 
     /**
+     * Update a document
+     */
+    updateDocument: builder.mutation({
+      query: ({ id, document }: { id: string; document: TCreateDocumnet }) => ({
+        url: `/docs/puc/${id}`,
+        method: 'PUT',
+        body: document,
+      }),
+      invalidatesTags: ['documents', 'stats'],
+    }),
+
+    /**
+     * Delete a document
+     */
+    deleteDocument: builder.mutation({
+      query: (id: string) => ({
+        url: `/docs/puc/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['documents', 'stats'],
+    }),
+
+    /**
      * Get document stats
      */
     getStats: builder.query({
@@ -42,5 +65,7 @@ export const documentApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetDocumentsQuery,
   useCreateDocumentMutation,
+  useUpdateDocumentMutation,
+  useDeleteDocumentMutation,
   useGetStatsQuery,
 } = documentApiSlice;
