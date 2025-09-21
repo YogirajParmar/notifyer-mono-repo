@@ -9,6 +9,7 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortColumn, setSortColumn] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc'); // 'asc' or 'desc'
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Update and delete mutations
   const [updateDocument] = useUpdateDocumentMutation();
@@ -94,6 +95,12 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
     setDocumentToDelete(null);
   };
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -104,7 +111,15 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
     setCurrentPage(1); // Reset to first page on sort
   };
 
-  const sortedData = [...data].sort((a, b) => {
+  // Filter data based on search term
+  const filteredData = data.filter(
+    (doc) =>
+      doc.vehicleNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doc.vehicleType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doc.documentType?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedData = [...filteredData].sort((a, b) => {
     if (!sortColumn) return 0;
 
     let aValue;
@@ -204,6 +219,104 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
     );
   }
 
+  // No search results state
+  if (searchTerm && sortedData.length === 0) {
+    return (
+      <div className='p-6'>
+        {/* Table Header with Stats */}
+        <div className='flex justify-between items-center mb-6'>
+          <div>
+            <h2 className='text-xl font-semibold text-gray-900'>
+              Documents uploaded
+            </h2>
+            <p className='text-sm text-gray-600 mt-1'>
+              No results found for "{searchTerm}"
+            </p>
+          </div>
+        </div>
+
+        {/* Modern Search Bar */}
+        <div className='mb-6'>
+          <div className='relative max-w-md'>
+            <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+              <svg
+                className='h-5 w-5 text-gray-400'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+                />
+              </svg>
+            </div>
+            <input
+              type='text'
+              placeholder='Search by vehicle number, type, or document type...'
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className='block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200'
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className='absolute inset-y-0 right-0 pr-3 flex items-center'
+              >
+                <svg
+                  className='h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors duration-200'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M6 18L18 6M6 6l12 12'
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className='text-center py-12'>
+          <div className='mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
+            <svg
+              className='w-12 h-12 text-gray-400'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+              />
+            </svg>
+          </div>
+          <h3 className='text-lg font-medium text-gray-900 mb-2'>
+            No documents match your search
+          </h3>
+          <p className='text-gray-500 mb-4'>
+            Try searching with different keywords or clear your search to see
+            all documents.
+          </p>
+          <button
+            onClick={() => setSearchTerm('')}
+            className='inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+          >
+            Clear Search
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const renderSortIndicator = (column) => {
     if (sortColumn === column) {
       return sortDirection === 'asc' ? '▲' : '▼';
@@ -223,10 +336,64 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
             Showing {startIndex + 1}-
             {Math.min(startIndex + rowsPerPage, sortedData.length)} of{' '}
             {sortedData.length} documents
+            {searchTerm && (
+              <span className='text-blue-600 font-medium'>
+                {' '}
+                (filtered from {data.length} total)
+              </span>
+            )}
           </p>
         </div>
         <div className='text-sm text-gray-500'>
           Page {currentPage} of {totalPages}
+        </div>
+      </div>
+
+      {/* Modern Search Bar */}
+      <div className='mb-6'>
+        <div className='relative max-w-md'>
+          <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+            <svg
+              className='h-5 w-5 text-gray-400'
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+              />
+            </svg>
+          </div>
+          <input
+            type='text'
+            placeholder='Search by vehicle number, type, or document type...'
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className='block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200'
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className='absolute inset-y-0 right-0 pr-3 flex items-center'
+            >
+              <svg
+                className='h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors duration-200'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M6 18L18 6M6 6l12 12'
+                />
+              </svg>
+            </button>
+          )}
         </div>
       </div>
 
