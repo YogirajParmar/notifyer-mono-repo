@@ -11,3 +11,4 @@ config
 liquibase/*.properties
 database.sqlite
 /out
+/src/.dev-db
