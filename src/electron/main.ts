@@ -30,7 +30,7 @@ export class Main {
 
   private createWindow() {
     this.mainWindow = new BrowserWindow({
-      fullscreen: true,
+      fullscreen: false,
       minimizable: true,
       maximizable: true,
       closable: true,
