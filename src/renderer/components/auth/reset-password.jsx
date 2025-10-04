@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useResetPasswordMutation } from '../../redux/api/auth/authApiSlice';
 
 export const ResetPassword = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [resetPassword] = useResetPasswordMutation();
 
   const navigate = useNavigate();
 
@@ -15,24 +17,16 @@ export const ResetPassword = () => {
     setMessage('');
     setError('');
     try {
-      const response = await fetch(
-        'http://localhost:3200/auth/reset-password',
-        {
-          method: 'PUT',
-          body: JSON.stringify({ email, password }),
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      if (response.ok) {
+      const result = await resetPassword({ email, password }).unwrap();
+      if (result) {
         toast.success('Password reset successful.');
         navigate('/login');
       } else {
-        const data = await response.json();
-        setError(data.message || 'Password reset failed.');
+        const data = await result.json();
+        toast.error(data.message || 'Password reset failed.');
       }
     } catch (err) {
-      console.log(err);
-      setError('An error occurred. Please try again.');
+      toast.error(err?.data?.error || 'Password reset failed.');
     }
   };
 
