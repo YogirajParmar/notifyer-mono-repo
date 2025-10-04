@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist/main",
+    "outDir": "./dist/electron",
     "rootDir": "./src/electron",
     "paths": {
       "@electron/*": ["electron/*"]
