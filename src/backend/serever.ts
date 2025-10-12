@@ -43,7 +43,7 @@ export default class App {
     // Sync database to create tables
     const sequelize = getSequelize();
     try {
-      await sequelize.sync({ force: false });
+      await sequelize.sync({ force: false, alter: true });
       this.logger.log('info', 'Database tables synchronized successfully.');
     } catch (error) {
       this.logger.log('error', `Database sync failed: ${error}`);

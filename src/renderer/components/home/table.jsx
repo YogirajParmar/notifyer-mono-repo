@@ -102,6 +102,9 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
   };
 
   const handleSort = (column) => {
+    console.log('Sorting by column:', column);
+    console.log('Sort column:', sortColumn);
+
     if (sortColumn === column) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -134,6 +137,10 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
       case 'expirationDate':
         aValue = new Date(a[sortColumn]).getTime();
         bValue = new Date(b[sortColumn]).getTime();
+        break;
+      case 'serialNumber':
+        aValue = a.id;
+        bValue = b.id;
         break;
       default: // For text fields: vehicleNumber, vehicleType, documentType
         aValue = a[sortColumn].toLowerCase();
@@ -405,6 +412,12 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
               <tr>
                 <th
                   className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
+                  onClick={() => handleSort('serialNumber')}
+                >
+                  Sr No.{renderSortIndicator('serialNumber')}
+                </th>
+                <th
+                  className='px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer'
                   onClick={() => handleSort('vehicleNumber')}
                 >
                   Vehicle No.{renderSortIndicator('vehicleNumber')}
@@ -456,6 +469,11 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
                     key={index}
                     className='hover:bg-gray-50 transition-colors duration-150'
                   >
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <div className='text-sm font-medium text-gray-900'>
+                        #{doc.id}
+                      </div>
+                    </td>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='text-sm font-medium text-gray-900'>
                         {doc.vehicleNumber}
@@ -607,10 +625,6 @@ export const TableWithPagination = ({ data, rowsPerPage = 10 }) => {
               </svg>
             </button>
           </div>
-
-          {/* <div className='text-sm text-gray-500'>
-            {startIndex + 1}-{Math.min(startIndex + rowsPerPage, data.length)} of {data.length} results
-          </div> */}
         </div>
       )}
 

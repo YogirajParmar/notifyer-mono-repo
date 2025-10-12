@@ -43,13 +43,9 @@ export class DocumentController {
     try {
       const user = req.me;
 
-      const findExistingUser = await User.findByPk(user.id);
-
-      if (!findExistingUser) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      const userDocuments = await PUC.findAll({ where: { userId: user.id } });
+      const userDocuments = await PUC.findAll({
+        where: { userId: user.id, deleted: false },
+      });
       if (!userDocuments) {
         return res.status(404).json({ error: 'No documents found' });
       }
@@ -63,22 +59,17 @@ export class DocumentController {
 
   public deleteDocument = async (req: TRequest, res: TResponse) => {
     try {
-      const user = req.me;
       const { id } = req.params;
 
-      const findExistingUser = await User.findByPk(user.id);
+      const document = await PUC.findByPk(id);
 
-      if (!findExistingUser) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
-      const findExistingDocument = await PUC.findByPk(id);
-
-      if (!findExistingDocument) {
+      if (!document) {
         return res.status(404).json({ error: 'Document not found' });
       }
 
-      await findExistingDocument.destroy();
+      // soft delete document
+      await document.update({ deleted: true, deletedAt: new Date() });
+      // await findExistingDocument.destroy();
 
       return res.status(204).send();
     } catch (error) {
@@ -98,7 +89,9 @@ export class DocumentController {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      const totalDocuments = await PUC.count({ where: { userId: user.id } });
+      const totalDocuments = await PUC.count({
+        where: { userId: user.id, deleted: false },
+      });
 
       const today = new Date();
       const expieredDocs = await PUC.count({
@@ -153,24 +146,19 @@ export class DocumentController {
         expirationDate,
         documentType,
       } = req.dto;
-      const findExistingUser = await User.findByPk(user.id);
 
-      if (!findExistingUser) {
-        return res.status(404).json({ error: 'User not found' });
-      }
+      const document = await PUC.findOne({
+        where: { id, deleted: false },
+      });
 
-      const findExistingDocument = await PUC.findByPk(id);
-
-      if (!findExistingDocument) {
+      if (!document) {
         return res.status(404).json({ error: 'Document not found' });
       }
 
-      const updateDocument = await findExistingDocument.update({
-        vehicleNumber: vehicleNumber,
-        vehicleType: vehicleType,
+      await document.update({
+        ...req.dto,
         issueDate: new Date(issueDate),
-        expirationDate: new Date(expirationDate) || null,
-        documentType: documentType,
+        expirationDate: new Date(expirationDate),
       });
 
       return res.status(200).json(true);
@@ -185,12 +173,6 @@ export class DocumentController {
     const userId = req.me.id;
 
     try {
-      const findExistingUser = await User.findByPk(userId);
-
-      if (!findExistingUser) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-
       const document = await PUC.findOne({ where: { id: id, userId: userId } });
 
       if (!document) {
@@ -221,6 +203,7 @@ export class DocumentController {
             { vehicleNumber: { [Op.like]: `%${query}%` } },
             { vehicleType: { [Op.like]: `%${query}%` } },
           ],
+          deleted: false,
         },
         order: [['createdAt', 'DESC']],
       });
