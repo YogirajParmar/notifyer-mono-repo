@@ -11,3 +11,4 @@
 
 ## Backend
 - [ ] Fix backend issues.
+- [ ] Implement DB migrations.
