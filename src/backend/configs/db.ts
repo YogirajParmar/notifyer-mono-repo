@@ -1,13 +1,21 @@
 import path from 'path';
 import { Sequelize, Options } from 'sequelize';
+import { logger } from '../helpers';
 import { app } from 'electron';
-
 
 let sequelize: Sequelize;
 
+function resolveDBPath(): string {
+  if (!app) {
+    return path.resolve(__dirname, '../../.dev-db/database.sqlite');
+  } else {
+    return path.join(app.getPath('userData'), 'database.sqlite');
+  }
+}
+
 export function initDB(config: Options): void {
   if (sequelize) {
-    console.log("Database instance already initialized.");
+    logger.log('info', 'Database instance already initialized.');
     return;
   }
 
@@ -15,38 +23,29 @@ export function initDB(config: Options): void {
     ...config,
     dialectOptions: {
       ...config.dialectOptions,
-      foreign_keys: false
-    }
+      foreign_keys: false,
+    },
+    logging: false,
   });
 
-  sequelize.authenticate()
-    .then(() => {
-      console.info("DB Connection has been established successfully.");
-      return sequelize.query('PRAGMA foreign_keys = OFF;')
-        .then(() => sequelize.sync({ alter: true }))
-        .then(() => sequelize.query('PRAGMA foreign_keys = ON;'));
-    })
-    .then(() => {
-      console.info('Database & tables created!');
-    })
-    .catch((error: any) => {
-      console.error(`Unable to connect to the database: ${error}`);
-    });
+  sequelize.authenticate().then(() => {
+    logger.log('info', 'DB Connection has been established successfully.');
+  });
 }
 
 export function getSequelize(): Sequelize {
-  const dbPath = path.join(app.getPath('userData'), 'database.sqlite');
   if (!sequelize) {
+    const dbPath = resolveDBPath();
+
     initDB({
-      dialect: "sqlite",
-      database: "shivam",
-      username: "root",
-      password: "",
-      host: "localhost",
+      dialect: 'sqlite',
+      database: 'shivam',
+      username: 'root',
+      password: '',
+      host: 'localhost',
       port: 3306,
       storage: dbPath,
-    })
-    // throw new Error('Database not initialized. Call initDB() first.');
+    });
   }
   return sequelize;
 }

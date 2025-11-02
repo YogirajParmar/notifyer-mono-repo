@@ -1,11 +1,10 @@
-import { TRequest, TResponse } from "../../types";
-import { User } from "../../entities";
-import { JwtHelper, Bcrypt} from "../../helpers";
-import { Constants } from "../../configs";
-import { CreateUserDto, SignInDto } from "./dto";
+import { TRequest, TResponse } from '../../types';
+import { User } from '../../entities';
+import { JwtHelper, Bcrypt } from '../../helpers';
+import { Constants } from '../../configs';
+import { CreateUserDto, SignInDto } from './dto';
 
 export class AuthController {
-
   public create = async (req: TRequest<CreateUserDto>, res: TResponse) => {
     try {
       req.dto.password = await Bcrypt.hash(req.dto.password);
@@ -16,10 +15,10 @@ export class AuthController {
         password: req.dto.password,
       });
       const token = JwtHelper.encode({ id: user.dataValues.id });
-      return res.status(200).json({ msg: "User created", token });
+      return res.status(200).json({ msg: 'User created', token });
     } catch (error) {
       console.log(error);
-      return res.status(500).json({ error: "Failed to create user" });
+      return res.status(500).json({ error: 'Failed to create user' });
     }
   };
 
@@ -29,23 +28,26 @@ export class AuthController {
 
       const user = await User.findOne({
         where: { email },
-        attributes: ["email", "id", "firstName", "lastName", "password"],
+        attributes: ['email', 'id', 'firstName', 'lastName', 'password'],
       });
 
       if (!user) {
-        return res.status(400).json({ error: "Please verify email account!" });
+        return res.status(400).json({ error: 'Please verify email account!' });
       }
 
       const compare = await Bcrypt.verify(password, user.dataValues.password);
 
       if (!compare) {
-        return res.status(400).json({ error: "Please check your password!" });
+        return res.status(400).json({ error: 'Please check your password!' });
       }
 
       const token = JwtHelper.encode({ id: user.dataValues.id });
-      return res.status(200).json({ token });
+
+      const userName = `${user.firstName ?? ''}`;
+      return res.status(200).json({ token, userName });
     } catch (error) {
-      return res.status(500).json({ error: "Sign-in failed" });
+      console.log(error);
+      return res.status(500).json({ error: 'Sign-in failed' });
     }
   };
 
@@ -55,7 +57,7 @@ export class AuthController {
     const user = await User.findOne({ where: { email: email } });
 
     if (!user || !user.dataValues) {
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const hashedPassword = await Bcrypt.hash(password);

@@ -1,6 +1,6 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
-import { getSequelize } from "../configs";
-import { User } from "../entities"
+import { Model, DataTypes, Sequelize } from 'sequelize';
+import { getSequelize } from '../configs';
+import { User } from '../entities';
 
 class PUC extends Model {
   public id!: number;
@@ -12,38 +12,50 @@ class PUC extends Model {
   public userId!: number;
 }
 
-PUC.init({
-  vehicleNumber: {
-    type: DataTypes.STRING,
-    allowNull: false,
+PUC.init(
+  {
+    vehicleNumber: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    vehicleType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    issueDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    expirationDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    documentType: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
-  vehicleType: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  issueDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  expirationDate: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  documentType: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-}, {
-  sequelize: getSequelize(),
-  tableName: "pucs",
-  timestamps: true,
-});
+  {
+    sequelize: getSequelize(),
+    tableName: 'pucs',
+    timestamps: true,
+  }
+);
 
-PUC.belongsTo(User, { foreignKey: "userId"});
-User.hasMany(PUC, { foreignKey: "userId"});
+PUC.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(PUC, { foreignKey: 'userId' });
 
 export { PUC };

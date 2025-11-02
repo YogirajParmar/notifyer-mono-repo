@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/electron",
+    "rootDir": "./src/electron",
+    "paths": {
+      "@electron/*": ["electron/*"]
+    }
+  },
+  "include": ["src/electron/**/*"],
+  "exclude": ["src/renderer",  "src/backend"]
+}
