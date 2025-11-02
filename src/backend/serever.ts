@@ -7,15 +7,13 @@ import morgan from 'morgan';
 import methodOverride from 'method-override';
 import 'reflect-metadata';
 import Routes from './routes';
-import { initDB } from './configs/db';
+import { initDB, getSequelize } from './configs/db';
 import path from 'path';
 import { app } from 'electron';
-import { User, PUC } from './entities';
 import { logger } from './helpers';
 import { ApiLoggerMiddleware } from './middlewares/logger.middleware';
 import ReminderNotification from './cron/notification.cron';
 import cors from 'cors';
-import { getSequelize } from './configs/db';
 dotenv.config();
 
 export default class App {
@@ -32,18 +30,12 @@ export default class App {
       password: '',
       host: 'localhost',
       port: 3306,
-      // storage: path.join(app.getPath("userData"), "database.sqlite"),
-      storage: path.join(__dirname, 'database.sqlite'),
     });
-
-    // Ensure models are initialized
-    User;
-    PUC;
 
     // Sync database to create tables
     const sequelize = getSequelize();
     try {
-      await sequelize.sync({ force: false, alter: true });
+      await sequelize.sync({ force: false, alter: false });
       this.logger.log('info', 'Database tables synchronized successfully.');
     } catch (error) {
       this.logger.log('error', `Database sync failed: ${error}`);
@@ -54,7 +46,6 @@ export default class App {
 
     // Security
     this.app.use(helmet());
-    this.app.use(morgan('tiny'));
     this.app.use(compression());
 
     // CORS setting

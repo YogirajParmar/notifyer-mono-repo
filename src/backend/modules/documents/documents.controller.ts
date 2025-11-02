@@ -100,6 +100,7 @@ export class DocumentController {
           expirationDate: {
             [Op.lt]: today,
           },
+          deleted: false,
         },
       });
 
@@ -118,6 +119,7 @@ export class DocumentController {
           expirationDate: {
             [Op.between]: [currentMonthStart, currentMonthEnd],
           },
+          deleted: false,
         },
       });
 
@@ -173,7 +175,9 @@ export class DocumentController {
     const userId = req.me.id;
 
     try {
-      const document = await PUC.findOne({ where: { id: id, userId: userId } });
+      const document = await PUC.findOne({
+        where: { id: id, userId: userId, deleted: false },
+      });
 
       if (!document) {
         return res.status(404).json({ error: 'Document not found' });
