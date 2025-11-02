@@ -1,1 +1,3 @@
-# notifyer-mono-repo
+# DocAlert
+
+Platform to store all you document related information

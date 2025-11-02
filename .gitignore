@@ -1,6 +1,5 @@
 node_modules
 dist/
-.env
 .env.prod
 local.env
 combined.log
@@ -10,3 +9,5 @@ uploads/*
 config
 liquibase/*.properties
 database.sqlite
+/out
+/src/.dev-db

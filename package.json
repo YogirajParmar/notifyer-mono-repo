@@ -1,37 +1,42 @@
 {
-  "name": "mono-repo",
-  "version": "1.1.7",
+  "name": "docalert",
+  "version": "1.2.17",
   "private": true,
-  "main": "dist/frontend/electron.js",
+  "main": "dist/electron/main.js",
+  "description": "DocAlert is an application to manage Pollution Under Control (PUC) certificates and other vehicle documents.",
   "author": {
     "name": "Yogirajsinh Parmar",
     "email": "yogirajparmar44@gmail.com"
   },
   "scripts": {
-    "build": "yarn build:fe && yarn build:be",
-    "dev": "concurrently \"yarn dev:fe\" \"yarn dev:be\"",
-    "dev:fe": "electron dist/frontend/electron.js",
-    "dev:be": "ts-node-dev --respawn -r tsconfig-paths/register --transpile-only src/backend/index.ts",
-    "build:fe": "cd src/frontend && tsc && cd ../.. && yarn copy-fe-assets",
-    "build:be": "tsc && tsc-alias",
-    "start": "electron dist/frontend/electron.js",
+    "dev:be": "ts-node-dev --respawn --transpile-only src/backend/index.ts",
+    "dev:fe": "vite",
+    "dev:main": "tsc --watch --project tsconfig.main.json",
+    "dev:electron": "concurrently \"npm run dev:main\" \"npm run dev:fe\" \"electron .\"",
+    "dev": "concurrently \"npm run dev:be\" \"npm run dev:electron\"",
+    "build:be": "tsc && tsc-alias -p tsconfig.backend.json",
+    "build:fe": "vite build",
+    "build:main": "tsc && tsc-alias --project tsconfig.main.json",
+    "build": "npm run build:be && npm run build:main && npm run build:fe",
+    "preview": "vite preview",
+    "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "dist:win": "electron-builder build --win --x64 --publish never",
     "postinstall": "electron-builder install-app-deps",
-    "pretty:check": "prettier --check './**/*.{js,jsx,ts,tsx,json,md}'",
-    "pretty:write": "prettier --write './**/*.{js,jsx,ts,tsx,json,md}'",
-    "copy-fe-assets": "copyfiles -u 2 src/frontend/pages/* src/frontend/assets/**/* dist/frontend",
-    "dist:win": "electron-builder build --win --x64",
     "version": "git add package.json"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "@reduxjs/toolkit": "^2.9.0",
+    "@tanstack/react-table": "^8.21.3",
+    "bcrypt": "^6.0.0",
     "body-parser": "^1.20.2",
     "class-validator": "^0.14.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "^16.3.0",
+    "electron-log": "^5.3.0",
     "electron-updater": "^6.3.4",
     "express": "^4.18.2",
     "helmet": "^7.0.0",
@@ -40,6 +45,11 @@
     "method-override": "^3.0.0",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.6.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "6.22.3",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.37.3",
     "sqlite3": "5.1.6",
@@ -47,6 +57,7 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/compression": "^1.7.2",
@@ -58,10 +69,13 @@
     "@types/morgan": "^1.9.4",
     "@types/node": "^20.8.0",
     "@types/node-cron": "^3.0.11",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
-    "concurrently": "^8.0.1",
-    "copyfiles": "^2.4.1",
+    "@vitejs/plugin-react": "^5.0.2",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
     "electron": "^25.0.0",
     "electron-builder": "^24.0.0",
     "electron-rebuild": "^3.2.9",
@@ -73,19 +87,19 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "nodemon": "^2.0.22",
+    "postcss": "^8.5.6",
     "prettier": "^3.0.1",
-    "rimraf": "^5.0.1",
-    "sync-dotenv": "^2.7.0",
-    "ts-node": "^10.9.1",
+    "tailwindcss": "^4.1.13",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "tsc-alias": "^1.8.7",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "5.0.4"
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.0.4",
+    "vite": "^6.3.2"
   },
   "build": {
-    "appId": "com.yogiraj.notifyer",
-    "productName": "notifyer",
-    "icon": "dist/frontend/assets/icons/android-chrome-512x512.png",
+    "appId": "com.yogiraj.docalert",
+    "productName": "docalert",
+    "icon": "dist/renderer/icon/android-chrome-512x512.png",
     "publish": [
       {
         "provider": "github",
@@ -96,7 +110,6 @@
     "files": [
       "dist/**/*",
       "!dist/**/*.map",
-      "node_modules/**/*",
       "package.json"
     ],
     "extraResources": [
@@ -108,29 +121,23 @@
     "directories": {
       "buildResources": "assets"
     },
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/sqlite3/**/*"
+    ],
     "win": {
       "target": [
         "nsis"
       ],
-      "icon": "dist/frontend/assets/icons/android-chrome-512x512.png"
+      "icon": "public/icon/android-chrome-512x512.png"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "notifyer"
+      "shortcutName": "DocAlert"
     },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "icon": "dist/frontend/assets/icons/android-chrome-512x512.png"
-    },
-    "asar": true,
-    "asarUnpack": [
-      "node_modules/sqlite3/**/*"
-    ],
     "afterPack": "./after-pack.js"
   }
 }
