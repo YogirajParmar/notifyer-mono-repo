@@ -1,46 +1,70 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
-import { getSequelize } from "../configs";
+import {
+  Model,
+  DataTypes,
+  Sequelize,
+  InferAttributes,
+  InferCreationAttributes,
+  NonAttribute,
+} from 'sequelize';
 
-class User extends Model {
-  public id!: number;
-  public firstName!: string;
-  public lastName!: string;
-  public password!: string;
-  public email!: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
+export default class User extends Model<
+  InferAttributes<User>,
+  InferCreationAttributes<User>
+> {
+  // #region Columns
+  declare id?: number;
+  declare firstName: string;
+  declare lastName: string;
+  declare password: string;
+  declare email: string;
+  declare readonly createdAt?: Date;
+  declare readonly updatedAt?: Date;
+  // #endregion
 
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  },
-  {
-    sequelize: getSequelize(),
-    tableName: "users",
-    timestamps: true,
+  // #region Associations
+  declare pucs?: NonAttribute<unknown>;
+  // #endregion
+
+  static initModel(sequelize: Sequelize) {
+    User.init(
+      {
+        id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        firstName: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        lastName: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        password: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+      },
+      {
+        sequelize,
+        tableName: 'users',
+        timestamps: true,
+      }
+    );
+
+    return User;
   }
-);
 
-export { User };
+  static associate() {
+    // Define associations here
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const PUC = require('./puc.entity').default;
+    User.hasMany(PUC, { foreignKey: 'userId', as: 'pucs' });
+  }
+}
