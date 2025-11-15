@@ -12,3 +12,6 @@
 ## Backend
 - [ ] Fix backend issues.
 - [ ] Implement DB migrations.
+
+## Frontend
+- [ ] Fix the home page UI. Large scroll after table.
