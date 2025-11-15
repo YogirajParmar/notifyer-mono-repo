@@ -124,8 +124,7 @@
     },
     "asar": true,
     "asarUnpack": [
-      "node_modules/sqlite3/**/*",
-      "**/node_modules/bcrypt/**"
+      "node_modules/sqlite3/**/*"
     ],
     "win": {
       "target": [
