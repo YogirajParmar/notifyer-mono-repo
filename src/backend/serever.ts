@@ -3,23 +3,22 @@ import compression from 'compression';
 import dotenv from 'dotenv';
 import express from 'express';
 import helmet from 'helmet';
-import morgan from 'morgan';
 import methodOverride from 'method-override';
 import 'reflect-metadata';
 import Routes from './routes';
-import { initDB, getSequelize } from './configs/db';
-import path from 'path';
-import { app } from 'electron';
+import { initDB } from './configs/db';
 import { logger } from './helpers';
 import { ApiLoggerMiddleware } from './middlewares/logger.middleware';
 import ReminderNotification from './cron/notification.cron';
 import cors from 'cors';
+import { Migrator } from './db/umzug';
 dotenv.config();
 
 export default class App {
   protected app: express.Application;
   private logger = logger;
   private reminderNotification = new ReminderNotification();
+  private migration = new Migrator();
 
   public async init() {
     // Init DB
@@ -33,12 +32,12 @@ export default class App {
     });
 
     // Sync database to create tables
-    const sequelize = getSequelize();
     try {
-      await sequelize.sync({ force: false, alter: false });
-      this.logger.log('info', 'Database tables synchronized successfully.');
+      this.logger.log('info', 'Check and run migrations');
+      await this.migration.runMigrations();
+      this.logger.log('info', 'Migration applied successfully.');
     } catch (error) {
-      this.logger.log('error', `Database sync failed: ${error}`);
+      this.logger.log('error', `Migration failed: ${error}`);
     }
 
     // Init Express

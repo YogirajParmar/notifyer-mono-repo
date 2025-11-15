@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-export class TRouter {
+export abstract class TRouter {
 
   public router: Router;
 
