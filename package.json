@@ -108,11 +108,7 @@
         "repo": "notifyer-mono-repo"
       }
     ],
-    "files": [
-      "dist/**/*",
-      "!dist/**/*.map",
-      "package.json"
-    ],
+    "files": ["dist/**/*"],
     "extraResources": [
       {
         "from": ".env",
