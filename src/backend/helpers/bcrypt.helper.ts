@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { Constants } from "../configs";
 
 export class Bcrypt {
