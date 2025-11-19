@@ -1,5 +1,5 @@
 appId: com.yogiraj.docalert
-productName: docalert
+productName: DocAlert
 
 directories:
   buildResources: assets
@@ -13,7 +13,7 @@ extraResources:
 
 asar: true
 asarUnpack:
-  - node_modules/sqlite3/**/*
+  - "**/*.node"
   
 publish:
   - provider: github
