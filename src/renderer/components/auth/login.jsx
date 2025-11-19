@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLoginMutation } from '../../redux/api/auth/authApiSlice';
+import { useUpdateStatus } from '../../hooks/useUpdateStatus';
 import React from 'react';
 
 export const Login = () => {
@@ -10,6 +11,7 @@ export const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const [login, { isLoading }] = useLoginMutation();
+  const { isUpdateInProgress } = useUpdateStatus();
 
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -17,6 +19,13 @@ export const Login = () => {
   const handleSubmit = async (e) => {
     setError('');
     e.preventDefault();
+    
+    // Block login during updates
+    if (isUpdateInProgress) {
+      setError('Please wait for the update to complete before logging in.');
+      return;
+    }
+
     try {
       const result = await login({ email, password }).unwrap();
 
@@ -47,6 +56,7 @@ export const Login = () => {
               placeholder='Your email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={isUpdateInProgress}
               required
             />
 
@@ -58,6 +68,7 @@ export const Login = () => {
                 placeholder='Your password'
                 value={password}
                 onChange={(e) => setPassWord(e.target.value)}
+                disabled={isUpdateInProgress}
                 required
               />
               <span
@@ -72,11 +83,11 @@ export const Login = () => {
 
             <button
               className={`w-4/5 py-3.5 bg-black text-white rounded-full text-base mt-[30px] 
-                ${loading || !email || !password ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+                ${loading || !email || !password || isUpdateInProgress ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
               type='submit'
-              disabled={loading || !email || !password}
+              disabled={loading || !email || !password || isUpdateInProgress}
             >
-              {loading ? 'Logging in...' : 'Log in'}
+              {isUpdateInProgress ? 'Update in progress...' : loading ? 'Logging in...' : 'Log in'}
             </button>
 
             <div className='flex justify-end w-4/5 mx-auto text-xs mt-4'>

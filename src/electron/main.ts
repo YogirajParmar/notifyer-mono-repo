@@ -11,6 +11,7 @@ export class Main {
   private updater = autoUpdater;
 
   private indexPage: string;
+  private isUpdateInProgress = false;
 
   constructor() {
     this.indexPage = path.join(__dirname, '../index.html');
@@ -57,40 +58,68 @@ export class Main {
     try {
       this.updater.on('checking-for-update', () => {
         logger.log('info', 'checking for updates...');
+        this.sendUpdateStatus('checking', null);
       });
 
-      this.updater.on('update-not-available', async (info: any) => {
-        logger.log('info', `Update available! ${info}`);
+      this.updater.on('update-available', async (info: any) => {
+        logger.log('info', `Update available! ${info.version}`);
+        this.isUpdateInProgress = true;
+        this.sendUpdateStatus('available', { version: info.version });
+        
+        // Automatically start downloading the update
+        logger.log('info', 'Starting download...');
+        this.sendUpdateStatus('downloading', { version: info.version, progress: 0 });
+        this.updater.downloadUpdate();
+      });
 
-        const { response } = await dialog.showMessageBox({
-          type: 'info',
-          title: 'Update Available',
-          message: `A new update (v${info.version}) is available. Please download it now.`,
-          buttons: ['Download Now'],
-          defaultId: 0,
-          noLink: true,
-        });
-
-        if (response === 0) {
-          logger.log('info', 'Downloading update now...');
-          this.updater.downloadUpdate();
-        }
+      this.updater.on('update-not-available', (info: any) => {
+        logger.log('info', `No update available. Current version: ${info.version}`);
+        this.isUpdateInProgress = false;
+        this.sendUpdateStatus('not-available', { version: info.version });
       });
 
       this.updater.on('download-progress', (progress) => {
-        logger.log('info', `Download in progress: ${progress}`);
+        logger.log('info', `Download in progress: ${Math.round(progress.percent)}%`);
+        this.sendUpdateStatus('downloading', {
+          percent: Math.round(progress.percent),
+          bytesPerSecond: progress.bytesPerSecond,
+          transferred: progress.transferred,
+          total: progress.total,
+        });
+      });
+
+      this.updater.on('update-downloaded', (info: any) => {
+        logger.log('info', 'Update downloaded, ready to install');
+        this.isUpdateInProgress = true;
+        this.sendUpdateStatus('ready-to-install', { version: info.version });
+        
+        // Wait a moment to show the message, then quit and install
+        setTimeout(() => {
+          logger.log('info', 'Quitting and installing update...');
+          this.updater.quitAndInstall();
+        }, 2000);
       });
 
       this.updater.on('error', (error) => {
-        logger.log('info', `Failed to download the updates ${error}`);
+        logger.log('error', `Failed to download the updates ${error}`);
+        this.isUpdateInProgress = false;
+        this.sendUpdateStatus('error', { error: error.message || 'Update failed' });
       });
 
       this.updater.checkForUpdates();
     } catch (error) {
       logger.log(
-        'info',
+        'error',
         `An error occured while checking the updates: ${error}`
       );
+      this.isUpdateInProgress = false;
+      this.sendUpdateStatus('error', { error: error.message || 'Update check failed' });
+    }
+  }
+
+  private sendUpdateStatus(status: string, data: any) {
+    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+      this.mainWindow.webContents.send('update-status', { status, data });
     }
   }
 
@@ -102,6 +131,10 @@ export class Main {
 
     ipcMain.handle('get-app-version', async () => {
       return app.getVersion();
+    });
+
+    ipcMain.handle('is-update-in-progress', () => {
+      return this.isUpdateInProgress;
     });
 
     ipcMain.on('login-failed', (event) => {
@@ -138,7 +171,13 @@ export class Main {
 
   private resolveIconPath() {
     return this.mainApp.isPackaged
-      ? path.join(process.resourcesPath, 'dist', 'renderer', 'icon', 'android-chrome-192x192.png')
+      ? path.join(
+          process.resourcesPath,
+          'dist',
+          'renderer',
+          'icon',
+          'android-chrome-192x192.png'
+        )
       : path.join(process.cwd(), 'public', 'android-chrome-192x192.png');
   }
 }

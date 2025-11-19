@@ -1,0 +1,35 @@
+appId: com.yogiraj.docalert
+productName: DocAlert
+
+directories:
+  buildResources: assets
+
+files:
+  - dist/**
+
+extraResources:
+  - from: .env
+    to: .env
+
+asar: true
+asarUnpack:
+  - "**/*.node"
+  
+publish:
+  - provider: github
+    owner: YogirajParmar
+    repo: notifyer-mono-repo
+
+win:
+  target:
+    - nsis
+  icon: public/icon/android-chrome-512x512.png
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: DocAlert
+
+afterPack: ./after-pack.js

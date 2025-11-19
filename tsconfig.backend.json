@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist/backend",
     "rootDir": "./src/backend",
+    "esModuleInterop": true,
     "paths": {
       "@backend/*": ["backend/*"],
       "@helpers": ["backend/helpers/*"],
