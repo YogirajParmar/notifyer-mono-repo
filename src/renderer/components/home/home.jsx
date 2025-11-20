@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import {
   useCreateDocumentMutation,
@@ -68,14 +69,14 @@ export function HomePage() {
       <div>
         <nav className='bg-black text-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 mb-5'>
           <div className='max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between'>
-            <a
-              href='#'
+            <Link
+              to='/home'
               className='flex items-center space-x-3 rtl:space-x-reverse'
             >
               <span className='self-center text-2xl font-semibold whitespace-nowrap dark:text-white'>
-                Doc Alert
+                Test
               </span>
-            </a>
+            </Link>
 
             <div className='flex items-center space-x-4'>
               <p className='dark:text-gray-300'>Welcome back, {userName}</p>
@@ -98,7 +99,7 @@ export function HomePage() {
         </nav>
       </div>
 
-      <div className='p-4 bg-gray-50 font-sans'>
+      <div className='p-4 bg-gray-50 font-sans pb-20'>
         <div className='w-full max-w-7xl mx-auto'>
           {isStatsLoading && <p>Loading stats...</p>}
           {isStatsError &&
@@ -119,7 +120,7 @@ export function HomePage() {
           <WarningCards documents={expiringDocuments} />
         </div>
 
-        <div className='min-h-screen flex flex-col items-center'>
+        <div className='flex flex-col items-center'>
           {/* Document table with pagination */}
           <div className='bg-white p-6 rounded-xl shadow-lg w-full max-w-7xl'>
             {isLoading && (

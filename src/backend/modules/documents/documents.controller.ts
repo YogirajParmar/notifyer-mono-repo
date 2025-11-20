@@ -107,9 +107,6 @@ export class DocumentController {
       const currentMonth = today.getMonth();
       const currentYear = today.getFullYear();
 
-      // Start of current month
-      const currentMonthStart = new Date(currentYear, currentMonth, 1);
-
       // End of current month
       const currentMonthEnd = new Date(currentYear, currentMonth + 1, 0);
 
@@ -117,7 +114,7 @@ export class DocumentController {
         where: {
           userId: user.id,
           expirationDate: {
-            [Op.between]: [currentMonthStart, currentMonthEnd],
+            [Op.between]: [today, currentMonthEnd],
           },
           deleted: false,
         },
